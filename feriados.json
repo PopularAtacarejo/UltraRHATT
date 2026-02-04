@@ -1,0 +1,140 @@
+{
+  "location": {
+    "country": "BR",
+    "state": "AL",
+    "city": "Arapiraca"
+  },
+  "holidays": [
+    {
+      "date": "01-01",
+      "name": "Ano Novo / Confraternização Universal",
+      "type": "feriado",
+      "scope": "nacional"
+    },
+    {
+      "date": "02-01",
+      "name": "Confraternização Universal",
+      "type": "feriado",
+      "scope": "nacional"
+    },
+    {
+      "date": "02-02",
+      "name": "Nossa Senhora do Bom Conselho",
+      "type": "feriado",
+      "scope": "municipal",
+      "location": "Arapiraca"
+    },
+    {
+      "date": null,
+      "name": "Carnaval",
+      "type": "ponto_facultativo",
+      "scope": "nacional",
+      "observations": "Data móvel (fevereiro ou março)"
+    },
+    {
+      "date": null,
+      "name": "Sexta-Feira da Paixão",
+      "type": "feriado",
+      "scope": "nacional",
+      "observations": "Data móvel"
+    },
+    {
+      "date": "21-04",
+      "name": "Tiradentes",
+      "type": "feriado",
+      "scope": "nacional"
+    },
+    {
+      "date": "01-05",
+      "name": "Dia do Trabalhador",
+      "type": "feriado",
+      "scope": "nacional"
+    },
+    {
+      "date": null,
+      "name": "Corpus Christi",
+      "type": "feriado",
+      "scope": "municipal",
+      "location": "Arapiraca",
+      "observations": "Data móvel"
+    },
+    {
+      "date": "24-06",
+      "name": "São João",
+      "type": "feriado",
+      "scope": "estadual",
+      "location": "Alagoas"
+    },
+    {
+      "date": "29-06",
+      "name": "São Pedro",
+      "type": "feriado",
+      "scope": "estadual",
+      "location": "Alagoas"
+    },
+    {
+      "date": "07-09",
+      "name": "Independência do Brasil",
+      "type": "feriado",
+      "scope": "nacional"
+    },
+    {
+      "date": "16-09",
+      "name": "Emancipação Política de Alagoas",
+      "type": "feriado",
+      "scope": "estadual",
+      "location": "Alagoas"
+    },
+    {
+      "date": "12-10",
+      "name": "Nossa Senhora Aparecida",
+      "type": "feriado",
+      "scope": "nacional"
+    },
+    {
+      "date": "28-10",
+      "name": "Dia do Servidor Público",
+      "type": "ponto_facultativo",
+      "scope": "nacional"
+    },
+    {
+      "date": "30-10",
+      "name": "Emancipação Política de Arapiraca",
+      "type": "feriado",
+      "scope": "municipal",
+      "location": "Arapiraca"
+    },
+    {
+      "date": "02-11",
+      "name": "Finados",
+      "type": "feriado",
+      "scope": "nacional"
+    },
+    {
+      "date": "15-11",
+      "name": "Proclamação da República",
+      "type": "feriado",
+      "scope": "nacional"
+    },
+    {
+      "date": "20-11",
+      "name": "Consciência Negra",
+      "type": "feriado",
+      "scope": "estadual",
+      "location": "Alagoas"
+    },
+    {
+      "date": "30-11",
+      "name": "Dia do Evangélico",
+      "type": "feriado",
+      "scope": "estadual",
+      "location": "Alagoas"
+    },
+    {
+      "date": "25-12",
+      "name": "Natal",
+      "type": "feriado",
+      "scope": "nacional"
+    }
+  ]
+}

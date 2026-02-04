@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atestados Medicos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/tailwind.css">
+
+    <style>
+        .brand-bolt-wrap {
+            position: relative;
+        }
+        .brand-bolt-wrap::after {
+            content: "";
+            position: absolute;
+            inset: -6px;
+            border-radius: 18px;
+            background: radial-gradient(circle at 40% 30%, rgba(250, 204, 21, 0.85), rgba(250, 204, 21, 0.25) 45%, rgba(250, 204, 21, 0) 70%);
+            filter: blur(10px);
+            opacity: 0.0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .brand-bolt-wrap:hover::after {
+            opacity: 1;
+        }
+        .brand-bolt {
+            color: #facc15;
+            filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.9)) drop-shadow(0 0 22px rgba(250, 204, 21, 0.7));
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+        .brand-bolt-wrap:hover .brand-bolt {
+            transform: scale(1.18) rotate(-2deg);
+            filter: drop-shadow(0 0 16px rgba(250, 204, 21, 1)) drop-shadow(0 0 34px rgba(250, 204, 21, 0.85));
+        }
+    </style>
+
+</head>
+<body class="flex h-screen overflow-hidden">
+    <aside class="w-72 glass border-r border-border-dark flex flex-col p-6 z-50" data-sidebar-active="atestados">
+        <div class="flex items-center gap-4 mb-10 px-2">
+            <div>
+                <h1 class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white to-text-dim bg-clip-text text-transparent">UltraRH</h1>
+                <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">Admin Panel</p>
+            </div>
+        </div>
+                <nav id="sidebar-links" class="flex-1 space-y-2 overflow-y-auto pr-2">
+        </nav>
+
+        <div class="mt-auto pt-6 border-t border-border-dark space-y-2">
+            <button onclick="alert('Limpando expirados...')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-text-dim hover:text-danger hover:bg-danger/5 transition-all text-sm font-medium">
+                <span class="material-symbols-rounded">delete_sweep</span>
+                Limpar Expirados
+            </button>
+            <button onclick="alert('Saindo...')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-text-dim hover:text-white hover:bg-white/5 transition-all text-sm font-medium">
+                <span class="material-symbols-rounded">logout</span>
+                Sair do Sistema
+            </button>
+        </div>
+    </aside>
+    <main class="flex-1 flex flex-col min-w-0 bg-bg-dark relative overflow-hidden">
+        <div class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>
+        <div class="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px] pointer-events-none"></div>
+        <header class="h-20 glass border-b border-border-dark flex items-center justify-between px-8 z-40">
+            <div class="flex items-center gap-6">
+                <div class="flex flex-col">
+                    <div class="flex items-center gap-2">
+                        <h2 id="user-greeting" class="text-sm font-bold text-white">Boa tarde, Jeferson</h2>
+                        <span class="text-xs text-text-dim">|</span>
+                        <span id="current-time" class="text-xs font-mono text-primary font-bold">17:31:50</span>
+                    </div>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
+                        <span class="text-[10px] font-mono text-text-dim uppercase tracking-wider">Sistema Online</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-6">
+                <div class="relative user-menu-container">
+                    <div class="flex items-center gap-3 pl-6 border-l border-border-dark cursor-pointer group">
+                        <div class="text-right hidden sm:block">
+                            <p id="user-name-display" class="text-xs font-bold text-white group-hover:text-primary transition-colors">Jeferson</p>
+                            <p id="user-role-display" class="text-[10px] text-text-dim font-mono uppercase">Desenvolvedor</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-surface-elevated border border-border-dark flex items-center justify-center overflow-hidden group-hover:border-primary transition-all">
+                            <img id="user-avatar" src="https://ui-avatars.com/api/?name=Jeferson&amp;background=0F172A&amp;color=3B82F6" alt="Jeferson">
+                        </div>
+                        <span class="material-symbols-rounded text-text-dim group-hover:text-white transition-colors">expand_more</span>
+                    </div>
+                    <div class="user-dropdown-menu">
+                        <div class="px-4 py-3 border-b border-white/5">
+                            <p class="text-[10px] font-bold text-text-dim uppercase tracking-widest">Conta</p>
+                        </div>
+                        <a href="perfil.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-text-dim hover:text-white hover:bg-white/5 transition-all">
+                            <span class="material-symbols-rounded text-lg">person</span>
+                            Meu Perfil
+                        </a>
+                        <a href="configuracoes.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-text-dim hover:text-white hover:bg-white/5 transition-all">
+                            <span class="material-symbols-rounded text-lg">settings</span>
+                            Configurações
+                        </a>
+                        <div class="h-px bg-white/5 my-1"></div>
+                        <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-danger hover:bg-danger/5 transition-all">
+                            <span class="material-symbols-rounded text-lg">logout</span>
+                            Sair da Conta
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8 space-y-6">
+            <section class="grid gap-6 md:grid-cols-3">
+                <div class="glass p-6 rounded-3xl space-y-4 border border-white/5">
+                    <p class="text-[10px] uppercase tracking-[0.4em] text-text-dim">Atestados pendentes</p>
+                    <p id="metric-pending" class="text-4xl font-extrabold text-white">--</p>
+                    <p class="text-xs uppercase tracking-[0.4em] text-primary">Últimas 24h</p>
+                </div>
+                <div class="glass p-6 rounded-3xl space-y-4 border border-white/5">
+                    <p class="text-[10px] uppercase tracking-[0.4em] text-text-dim">Média de duração</p>
+                    <p id="metric-average" class="text-4xl font-extrabold text-white">-- dias</p>
+                    <p class="text-xs uppercase tracking-[0.4em] text-primary">Registros ativos</p>
+                </div>
+                <div class="glass p-6 rounded-3xl space-y-4 border border-white/5">
+                    <p class="text-[10px] uppercase tracking-[0.4em] text-text-dim">Última atualização</p>
+                    <p id="metric-last-update" class="text-3xl font-extrabold text-white">--</p>
+                    <a href="#" class="text-xs uppercase tracking-[0.5em] text-primary hover:text-white transition-colors">Ver log completo</a>
+                </div>
+            </section>
+            <div class="grid gap-6 lg:grid-cols-[1.35fr,0.9fr]">
+                <form id="atestados-form" class="space-y-6">
+                    <section class="glass p-8 space-y-5 rounded-3xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="section-heading">Busca inteligente</p>
+                                <h3 class="text-2xl font-semibold text-white">Encontre o colaborador</h3>
+                            </div>
+                            <span class="detail-pill">CPF ou nome</span>
+                        </div>
+                        <div class="grid gap-4 md:grid-cols-3">
+                            <div class="md:col-span-2">
+                                <input id="employee-search" type="text" class="input-pill" placeholder="Digite o nome ou CPF" autocomplete="off">
+                            </div>
+                            <div class="flex gap-3">
+                                <button type="button" id="search-reset" class="px-5 py-3 rounded-full border border-white/20 text-xs uppercase tracking-[0.5em] text-text-dim hover:border-primary hover:text-white transition-all">Limpar</button>
+                            </div>
+                        </div>
+                        <div id="employee-results" class="grid gap-3 md:grid-cols-2"></div>
+                    </section>
+                    <section class="glass p-8 space-y-5 rounded-3xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="section-heading">Dados selecionados</p>
+                                <h3 class="text-2xl font-semibold text-white">Funcionario escolhido</h3>
+                            </div>
+                            <span class="detail-pill" id="selection-state">Nenhum funcionario selecionado</span>
+                        </div>
+                        <div class="grid gap-4 md:grid-cols-3">
+                            <div>
+                                <label class="text-[10px] uppercase tracking-wider text-text-dim font-semibold">Nome completo</label>
+                                <input name="funcionario_nome" id="funcionario-nome" type="text" class="input-pill" placeholder="Nome do colaborador" required>
+                            </div>
+                            <div>
+                                <label class="text-[10px] uppercase tracking-wider text-text-dim font-semibold">CPF</label>
+                                <input name="funcionario_cpf" id="funcionario-cpf" type="text" class="input-pill" placeholder="000.000.000-00" required>
+                            </div>
+                            <div>
+                                <label class="text-[10px] uppercase tracking-wider text-text-dim font-semibold">Matricula (opcional)</label>
+                                <input name="funcionario_id" id="funcionario-id" type="text" class="input-pill" placeholder="ID do registro" readonly>
+                            </div>
+                            <div>
+                                <label class="text-[10px] uppercase tracking-wider text-text-dim font-semibold">Empresa</label>
+                                <input name="empresa" id="empresa-input" type="text" class="input-pill" placeholder="UltraRH">
+                            </div>
+                            <div>
+                                <label class="text-[10px] uppercase tracking-wider text-text-dim font-semibold">Setor</label>
+                                <input name="setor" id="setor-input" type="text" class="input-pill" placeholder="Ex: Operacoes">
+                            </div>
+                            <div>
+                                <label class="text-[10px] uppercase tracking-wider text-text-dim font-semibold">Funcao</label>
+                                <input name="funcao" id="funcao-input" type="text" class="input-pill" placeholder="Ex: Assistente">
+                            </div>
+                        </div>
+                    </section>
+                    <section class="glass p-8 space-y-6 rounded-3xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="section-heading">Periodo do atestado</p>
+                                <h3 class="text-2xl font-semibold text-white">Calendario automatico</h3>
+                            </div>
+                        </div>
+                        <div class="grid gap-4 md:grid-cols-3">
+                            <div>
+                                <label class="text-[10px] uppercase tracking-wider text-text-dim font-semibold">Data de inicio</label>
+                                <input id="data-inicio" name="data_inicio" type="date" class="input-pill" required>
+                            </div>
+                            <div>
+                                <label class="text-[10px] uppercase tracking-wider text-text-dim font-semibold">Duracao (dias)</label>
+                                <input id="periodo-dias" name="dias" type="number" min="1" class="input-pill" placeholder="Ex: 5" required>
+                            </div>
+                            <div>
+                                <label class="text-[10px] uppercase tracking-wider text-text-dim font-semibold">Data final</label>
+                                <input id="data-final" type="date" class="input-pill" readonly>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="glass p-8 space-y-5 rounded-3xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="section-heading">Complemento</p>
+                                <h3 class="text-2xl font-semibold text-white">Observacoes e documentos</h3>
+                            </div>
+                        </div>
+                        <div class="grid gap-4 md:grid-cols-2">
+                            <div class="md:col-span-2">
+                                <label class="text-[10px] uppercase tracking-wider text-text-dim font-semibold">Anotacoes</label>
+                                <textarea name="observacoes" id="observacoes" rows="4" class="input-pill" placeholder="Descreva o motivo, retorno previsto e observacoes clinicas"></textarea>
+                            </div>
+                        <div>
+                            <label class="text-[10px] uppercase tracking-wider text-text-dim font-semibold">Documento anexado</label>
+                            <label for="documento-input" class="file-upload">
+                                <span class="file-upload-btn">Escolher arquivo</span>
+                                <span id="documento-name" class="file-upload-label">Nenhum arquivo escolhido</span>
+                            </label>
+                            <input id="documento-input" name="documento" type="file" accept="application/pdf,image/*" class="sr-only" required>
+                            <p class="text-[10px] text-text-dim mt-2">Aceitamos PDF, JPG, JPEG e PNG.</p>
+                        </div>
+                        </div>
+                    </section>
+                    <div class="flex items-center justify-between pb-10">
+                        <div id="atestados-feedback" class="text-sm font-medium"></div>
+                        <div class="flex gap-3">
+                            <button type="reset" class="px-8 py-3 border border-white/10 rounded-2xl text-text-dim hover:border-white/40 transition-all">Limpar</button>
+                            <button type="submit" class="px-10 py-3 bg-gradient-to-r from-primary to-accent text-white rounded-2xl font-semibold shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all">Registrar Atestado</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="space-y-6">
+                    <section class="glass p-6 rounded-3xl border border-white/5 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <p class="section-heading">Indicadores</p>
+                            <span class="text-[10px] uppercase tracking-[0.4em] text-text-dim">em tempo real</span>
+                        </div>
+                        <div class="space-y-3 text-sm text-text-dim">
+                            <div class="flex items-center justify-between">
+                                <span>Status medio</span>
+                                <span class="text-white font-semibold">Processando</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span>Taxa de aprovacoes</span>
+                                <span class="text-white font-semibold">92%</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span>Documentos digitados</span>
+                                <span class="text-white font-semibold">14 hoje</span>
+                            </div>
+                        </div>
+                        <div class="h-2 w-full bg-white/5 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-primary to-accent" style="width: 72%;"></div>
+                        </div>
+                    </section>
+                    <section class="glass p-8 space-y-5 rounded-3xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="section-heading">Ultimos registros</p>
+                                <h3 class="text-2xl font-semibold text-white">Historico imediato</h3>
+                            </div>
+                        </div>
+                        <div id="last-atestados" class="space-y-3"></div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="scripts/sidebar.js"></script>
+        <script src="scripts/aton-widget.js" defer></script>
+    <script src="scripts/admin-common.js"></script>
+    <script src="scripts/atestados.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            ensureAuthenticated();
+        });
+    </script>
+</body>
+</html>

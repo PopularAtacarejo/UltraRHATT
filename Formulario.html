@@ -1,0 +1,2413 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"/>
+  <title>UltraRH - Trabalhe Conosco</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* ======= VARIÁVEIS E ESTILOS GLOBAIS OTIMIZADOS ======= */
+    :root {
+      --primary: #059669;
+      --primary-dark: #047857;
+      --primary-light: #10b981;
+      --primary-super-light: #d1fae5;
+      --secondary: #3b82f6;
+      --danger: #ef4444;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --bg-light: #f8fafc;
+      --bg-card-light: #ffffff;
+      --text-light: #1e293b;
+      --text-secondary-light: #64748b;
+      --border-light: #e2e8f0;
+      --shadow-light: 0 20px 40px rgba(0, 0, 0, 0.08);
+      --gradient-light: linear-gradient(135deg, #059669 0%, #10b981 100%);
+      --gradient-light-hover: linear-gradient(135deg, #047857 0%, #059669 100%);
+      
+      --bg-dark: #0f172a;
+      --bg-card-dark: #1e293b;
+      --text-dark: #f1f5f9;
+      --text-secondary-dark: #94a3b8;
+      --border-dark: #334155;
+      --shadow-dark: 0 20px 40px rgba(0, 0, 0, 0.3);
+      --gradient-dark: linear-gradient(135deg, #047857 0%, #059669 100%);
+      --gradient-dark-hover: linear-gradient(135deg, #065f46 0%, #047857 100%);
+      
+      --bg: var(--bg-light);
+      --bg-card: var(--bg-card-light);
+      --text: var(--text-light);
+      --text-secondary: var(--text-secondary-light);
+      --border: var(--border-light);
+      --shadow: var(--shadow-light);
+      --gradient: var(--gradient-light);
+      --gradient-hover: var(--gradient-light-hover);
+      
+      --radius-xl: 24px;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --radius-xs: 6px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    [data-theme='dark'] {
+      --bg: var(--bg-dark);
+      --bg-card: var(--bg-card-dark);
+      --text: var(--text-dark);
+      --text-secondary: var(--text-secondary-dark);
+      --border: var(--border-dark);
+      --shadow: var(--shadow-dark);
+      --gradient: var(--gradient-dark);
+      --gradient-hover: var(--gradient-dark-hover);
+    }
+    
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+    
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 0;
+      transition: var(--transition-slow);
+      position: relative;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 300px;
+      background: var(--gradient);
+      opacity: 0.05;
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    .app-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 20px;
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* ======= HEADER COM DESIGN MODERNO ======= */
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+      padding: 0 10px;
+    }
+    
+    .header-logo {
+      width: 100px;
+      height: 100px;
+      background: var(--gradient);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 25px;
+      position: relative;
+      box-shadow: 0 15px 35px rgba(5, 150, 105, 0.2);
+      transition: var(--transition);
+      border: 4px solid var(--bg-card);
+    }
+    
+    .header-logo:hover {
+      transform: translateY(-5px) rotate(5deg);
+      box-shadow: 0 20px 40px rgba(5, 150, 105, 0.3);
+    }
+    
+    .header-logo i {
+      font-size: 2.5rem;
+      color: white;
+    }
+    
+    .header h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 800;
+      margin-bottom: 15px;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+      background: linear-gradient(135deg, var(--text) 0%, var(--primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .header h1 .highlight {
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .header-subtitle {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin: 0 auto 20px;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    /* ======= BOTÃO TEMA ======= */
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      width: 50px;
+      height: 50px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+      cursor: pointer;
+      transition: var(--transition);
+      z-index: 1000;
+      box-shadow: var(--shadow);
+    }
+    
+    .theme-toggle:hover {
+      transform: rotate(15deg) scale(1.1);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    
+    /* ======= FORMULÁRIO ======= */
+    .form-container {
+      background: var(--bg-card);
+      border-radius: var(--radius-xl);
+      padding: 40px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      flex: 1;
+      margin-bottom: 40px;
+    }
+    
+    .form-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient);
+    }
+    
+    /* ======= STEPPER MODERNO RESPONSIVO ======= */
+    .stepper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 50px;
+      position: relative;
+      padding: 0 10px;
+      flex-wrap: wrap;
+    }
+    
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      min-width: 100px;
+      margin-bottom: 10px;
+    }
+    
+    .step-circle {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      border: 3px solid var(--border);
+      color: var(--text-secondary);
+      font-weight: 700;
+      font-size: 1.3rem;
+      transition: var(--transition);
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .step-label {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      transition: var(--transition);
+      text-align: center;
+      max-width: 120px;
+      word-wrap: break-word;
+    }
+    
+    .step.active .step-circle {
+      background: var(--gradient);
+      border-color: transparent;
+      color: white;
+      transform: scale(1.1);
+      box-shadow: 0 10px 20px rgba(5, 150, 105, 0.2);
+    }
+    
+    .step.active .step-label {
+      color: var(--primary);
+      font-weight: 700;
+    }
+    
+    .step.done .step-circle {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+    
+    .step.done .step-circle::after {
+      content: '✓';
+      font-size: 1.4rem;
+    }
+    
+    .step-line {
+      position: absolute;
+      top: 30px;
+      left: 60px;
+      right: 60px;
+      height: 3px;
+      background: var(--border);
+      z-index: 1;
+    }
+    
+    .step-line-fill {
+      position: absolute;
+      top: 30px;
+      left: 60px;
+      height: 3px;
+      background: var(--gradient);
+      z-index: 1;
+      transition: width 0.6s ease;
+      border-radius: 3px;
+    }
+    
+    /* ======= FIELDSETS ======= */
+    fieldset {
+      border: none;
+      margin-bottom: 40px;
+      padding: 0;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, var(--bg) 0%, var(--bg-card) 100%);
+      padding: 35px;
+      transition: var(--transition);
+      border: 1px solid var(--border);
+      position: relative;
+    }
+    
+    fieldset:not(:last-child) {
+      margin-bottom: 40px;
+    }
+    
+    fieldset[aria-disabled="true"] {
+      opacity: 0.6;
+      pointer-events: none;
+      filter: grayscale(0.3);
+    }
+    
+    legend {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding-bottom: 15px;
+      border-bottom: 3px solid var(--primary);
+      width: 100%;
+    }
+    
+    .legend-icon {
+      color: var(--primary);
+      font-size: 1.4rem;
+      width: 50px;
+      height: 50px;
+      background: var(--primary-super-light);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    /* ======= GRID DE FORMULÁRIO RESPONSIVO ======= */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      align-items: start;
+    }
+    
+    .form-group {
+      position: relative;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text);
+      transition: var(--transition);
+      line-height: 1.4;
+    }
+    
+    .required::after {
+      content: '*';
+      color: var(--danger);
+      margin-left: 4px;
+      font-weight: bold;
+    }
+    
+    .input-wrapper {
+      position: relative;
+    }
+    
+    .input-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+      z-index: 1;
+      font-size: 1.1rem;
+    }
+    
+    input[type="text"],
+    input[type="email"],
+    input[type="file"],
+    select {
+      width: 100%;
+      padding: 18px 20px 18px 55px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--bg-card);
+      color: var(--text);
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      transition: var(--transition);
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    
+    input[readonly],
+    select[readonly] {
+      background: var(--bg);
+      color: var(--text-secondary);
+      cursor: not-allowed;
+      border-style: dashed;
+      border-color: var(--border);
+    }
+    
+    input:focus:not([readonly]),
+    select:focus:not([readonly]) {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.15);
+      transform: translateY(-3px);
+    }
+    
+    input[type="file"] {
+      padding: 16px 20px 16px 55px;
+      cursor: pointer;
+    }
+    
+    input[type="file"]::file-selector-button {
+      background: var(--gradient);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-right: 15px;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    input[type="file"]::file-selector-button:hover {
+      background: var(--gradient-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(5, 150, 105, 0.3);
+    }
+    
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 18px center;
+      background-size: 20px;
+      padding-right: 55px;
+    }
+    
+    /* ======= HELP TEXT ======= */
+    .help-text {
+      display: block;
+      margin-top: 8px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+      min-height: 20px;
+    }
+    
+    .help-text.success {
+      color: var(--success);
+      font-weight: 500;
+    }
+    
+    .help-text.error {
+      color: var(--danger);
+      font-weight: 500;
+    }
+    
+    /* ======= BOTÃO SUBMIT ======= */
+    .submit-section {
+      margin-top: 50px;
+      padding-top: 30px;
+      border-top: 2px solid var(--border);
+    }
+    
+    .submit-btn {
+      background: var(--gradient);
+      color: white;
+      border: none;
+      padding: 20px 45px;
+      border-radius: var(--radius-lg);
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      width: 100%;
+      font-family: 'Poppins', sans-serif;
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+      min-height: 64px;
+    }
+    
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.7s;
+    }
+    
+    .submit-btn:hover:not(:disabled)::before {
+      left: 100%;
+    }
+    
+    .submit-btn:hover:not(:disabled) {
+      background: var(--gradient-hover);
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(5, 150, 105, 0.3);
+    }
+    
+    .submit-btn:active:not(:disabled) {
+      transform: translateY(-2px);
+    }
+    
+    .submit-btn:disabled {
+      background: var(--text-secondary);
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    
+    .btn-icon {
+      font-size: 1.3rem;
+    }
+    
+    .spinner {
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    /* ======= MENSAGENS ======= */
+    .message {
+      margin-top: 30px;
+      padding: 25px;
+      border-radius: var(--radius-lg);
+      font-weight: 600;
+      animation: slideIn 0.4s ease-out;
+      display: none;
+      text-align: center;
+      border-left: 5px solid;
+      font-size: 1.1rem;
+    }
+    
+    .message.success {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+      border-left-color: var(--success);
+    }
+    
+    .message.error {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+      border-left-color: var(--danger);
+    }
+    
+    /* ======= FOOTER ======= */
+    .footer {
+      text-align: center;
+      padding: 30px 0 20px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-top: auto;
+      border-top: 1px solid var(--border);
+    }
+    
+    .footer-logo {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 800;
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: var(--text);
+    }
+    
+    .footer-logo span {
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* ======= ANIMAÇÕES ======= */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    /* ======= ESTILOS PARA CEP ======= */
+    .cep-loading {
+      animation: pulse 1.5s infinite;
+      border-color: var(--primary) !important;
+    }
+    
+    .cep-success {
+      position: relative;
+    }
+    
+    .cep-success::after {
+      content: '✓';
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--success);
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    
+    /* ======= TOOLTIP ======= */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      margin-left: 8px;
+    }
+    
+    .tooltip-icon {
+      color: var(--text-secondary);
+      cursor: help;
+      font-size: 1rem;
+    }
+    
+    .tooltip-text {
+      visibility: hidden;
+      width: 250px;
+      background: var(--bg-card);
+      color: var(--text);
+      text-align: center;
+      border-radius: var(--radius-md);
+      padding: 15px;
+      position: absolute;
+      z-index: 1000;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      font-size: 0.9rem;
+      font-weight: normal;
+      line-height: 1.5;
+    }
+    
+    .tooltip-text::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: var(--bg-card) transparent transparent transparent;
+    }
+    
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+    
+    /* ======= VALIDAÇÃO VISUAL ======= */
+    .input-valid {
+      border-color: var(--success) !important;
+      background-color: rgba(16, 185, 129, 0.05) !important;
+    }
+    
+    .input-invalid {
+      border-color: var(--danger) !important;
+      animation: shake 0.5s;
+      background-color: rgba(239, 68, 68, 0.05) !important;
+    }
+    
+    /* ======= INDICADOR DE VALIDAÇÃO DE CPF ======= */
+    .cpf-validation-indicator {
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      opacity: 0;
+      transition: var(--transition);
+    }
+    
+    .cpf-validation-indicator.valid {
+      background-color: var(--success);
+      color: white;
+      opacity: 1;
+    }
+    
+    .cpf-validation-indicator.invalid {
+      background-color: var(--danger);
+      color: white;
+      opacity: 1;
+    }
+    
+    .cpf-validation-indicator.loading {
+      background-color: transparent;
+      border: 2px solid var(--primary);
+      border-top-color: transparent;
+      animation: spin 1s linear infinite;
+      opacity: 1;
+    }
+    
+    /* ======= BOTÃO PARA REVALIDAR CPF ======= */
+    .revalidate-btn {
+      position: absolute;
+      right: 45px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+      font-size: 0.8rem;
+      padding: 4px 8px;
+      border-radius: var(--radius-xs);
+      transition: var(--transition);
+      display: none;
+    }
+    
+    .revalidate-btn:hover {
+      background-color: var(--primary-super-light);
+    }
+    
+    .cpf-invalid .revalidate-btn {
+      display: block;
+    }
+    
+    /* ======= BLOQUEIO DE FORMULÁRIO ======= */
+    .form-blocked-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: var(--transition);
+    }
+    
+    .blocked-message {
+      background: var(--bg-card);
+      padding: 40px 30px;
+      border-radius: var(--radius-xl);
+      text-align: center;
+      box-shadow: var(--shadow-dark);
+      border: 1px solid var(--border);
+      max-width: 450px;
+      width: 90%;
+      position: relative;
+      animation: modalScale 0.3s ease-out;
+    }
+
+    @keyframes modalScale {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    
+    .close-blocked-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: var(--bg);
+      border: none;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: var(--transition);
+    }
+
+    .close-blocked-btn:hover {
+      background: var(--danger);
+      color: white;
+      transform: rotate(90deg);
+    }
+
+    .btn-modal-action {
+      margin-top: 25px;
+      width: 100%;
+      padding: 14px;
+      border-radius: var(--radius-md);
+      border: none;
+      background: var(--gradient);
+      color: white;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(5, 150, 105, 0.2);
+    }
+
+    .btn-modal-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(5, 150, 105, 0.3);
+      filter: brightness(1.1);
+    }
+
+    .btn-modal-action:active {
+      transform: translateY(0);
+    }
+
+    .btn-modal-action::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: 0.5s;
+    }
+
+    .btn-modal-action:hover::after {
+      left: 100%;
+    }
+    
+    .blocked-message h3 {
+      color: var(--danger);
+      margin-bottom: 15px;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .blocked-message p {
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+    
+    /* ======= RESPONSIVIDADE AVANÇADA ======= */
+    @media (max-width: 1200px) {
+      .app-container {
+        max-width: 100%;
+        padding: 25px 20px;
+      }
+    }
+    
+    @media (max-width: 992px) {
+      .header h1 {
+        font-size: 2.5rem;
+      }
+      
+      .header-subtitle {
+        font-size: 1.1rem;
+        max-width: 600px;
+      }
+      
+      .form-container {
+        padding: 35px;
+      }
+      
+      fieldset {
+        padding: 30px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .app-container {
+        padding: 20px 15px;
+      }
+      
+      .form-container {
+        padding: 25px;
+        border-radius: var(--radius-lg);
+      }
+      
+      .header {
+        margin-bottom: 30px;
+      }
+      
+      .header h1 {
+        font-size: 2.2rem;
+      }
+      
+      .header-logo {
+        width: 85px;
+        height: 85px;
+      }
+      
+      .header-logo i {
+        font-size: 2rem;
+      }
+      
+      .header-subtitle {
+        font-size: 1rem;
+        padding: 0 10px;
+      }
+      
+      .theme-toggle {
+        top: 15px;
+        right: 15px;
+        width: 45px;
+        height: 45px;
+      }
+      
+      .stepper {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 25px;
+        margin-bottom: 40px;
+      }
+      
+      .step {
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+        min-width: auto;
+        margin-bottom: 15px;
+      }
+      
+      .step-circle {
+        margin-bottom: 0;
+        margin-right: 15px;
+        width: 50px;
+        height: 50px;
+      }
+      
+      .step-label {
+        text-align: left;
+        max-width: none;
+      }
+      
+      .step-line,
+      .step-line-fill {
+        display: none;
+      }
+      
+      fieldset {
+        padding: 25px;
+        margin-bottom: 30px;
+      }
+      
+      legend {
+        font-size: 1.3rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      
+      .legend-icon {
+        width: 45px;
+        height: 45px;
+      }
+      
+      .form-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+      }
+      
+      input[type="text"],
+      input[type="email"],
+      input[type="file"],
+      select {
+        padding: 16px 18px 16px 50px;
+        font-size: 1rem;
+      }
+      
+      .input-icon {
+        left: 16px;
+      }
+      
+      .cpf-validation-indicator {
+        right: 16px;
+        width: 18px;
+        height: 18px;
+        font-size: 0.7rem;
+      }
+      
+      .revalidate-btn {
+        right: 40px;
+        font-size: 0.7rem;
+      }
+      
+      .submit-btn {
+        padding: 18px 30px;
+        font-size: 1.1rem;
+        min-height: 58px;
+      }
+      
+      .btn-icon {
+        font-size: 1.1rem;
+      }
+      
+      .spinner {
+        width: 20px;
+        height: 20px;
+      }
+      
+      .blocked-message {
+        width: 90%;
+        padding: 20px;
+      }
+      
+      .tooltip-text {
+        width: 200px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .app-container {
+        padding: 15px 12px;
+      }
+      
+      .form-container {
+        padding: 20px;
+        border-radius: var(--radius-md);
+      }
+      
+      .header h1 {
+        font-size: 1.9rem;
+      }
+      
+      .header-logo {
+        width: 75px;
+        height: 75px;
+        margin-bottom: 20px;
+      }
+      
+      .header-logo i {
+        font-size: 1.8rem;
+      }
+      
+      .header-subtitle {
+        font-size: 0.95rem;
+      }
+      
+      .theme-toggle {
+        top: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+        font-size: 0.9rem;
+      }
+      
+      fieldset {
+        padding: 20px;
+        margin-bottom: 25px;
+        border-radius: var(--radius-md);
+      }
+      
+      legend {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+      }
+      
+      .legend-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+      }
+      
+      .form-grid {
+        gap: 20px;
+      }
+      
+      label {
+        font-size: 0.95rem;
+        margin-bottom: 8px;
+      }
+      
+      input[type="text"],
+      input[type="email"],
+      input[type="file"],
+      select {
+        padding: 14px 16px 14px 45px;
+        font-size: 0.95rem;
+      }
+      
+      .input-icon {
+        left: 15px;
+        font-size: 1rem;
+      }
+      
+      .cpf-validation-indicator {
+        right: 15px;
+        width: 16px;
+        height: 16px;
+      }
+      
+      .revalidate-btn {
+        right: 36px;
+        font-size: 0.65rem;
+      }
+      
+      .help-text {
+        font-size: 0.85rem;
+      }
+      
+      .submit-btn {
+        padding: 16px 25px;
+        font-size: 1rem;
+        min-height: 54px;
+        border-radius: var(--radius-md);
+      }
+      
+      .spinner {
+        width: 18px;
+        height: 18px;
+      }
+      
+      .message {
+        padding: 20px;
+        font-size: 1rem;
+      }
+      
+      .footer {
+        padding: 25px 0 15px;
+        font-size: 0.85rem;
+      }
+      
+      .footer-logo {
+        font-size: 1.3rem;
+      }
+      
+      .blocked-message {
+        padding: 15px;
+        font-size: 0.9rem;
+      }
+      
+      .tooltip-text {
+        width: 180px;
+        font-size: 0.85rem;
+        padding: 12px;
+      }
+    }
+    
+    @media (max-width: 375px) {
+      .header h1 {
+        font-size: 1.7rem;
+      }
+      
+      .header-logo {
+        width: 65px;
+        height: 65px;
+      }
+      
+      .header-logo i {
+        font-size: 1.6rem;
+      }
+      
+      fieldset {
+        padding: 18px;
+      }
+      
+      input[type="text"],
+      input[type="email"],
+      input[type="file"],
+      select {
+        padding: 12px 14px 12px 40px;
+      }
+      
+      .cpf-validation-indicator {
+        right: 14px;
+      }
+      
+      .revalidate-btn {
+        right: 34px;
+      }
+      
+      .submit-btn {
+        padding: 14px 20px;
+        font-size: 0.95rem;
+      }
+    }
+    
+    /* ======= ORIENTAÇÃO LANDSCAPE ======= */
+    @media (max-width: 992px) and (orientation: landscape) {
+      .app-container {
+        padding: 15px;
+      }
+      
+      .header {
+        margin-bottom: 25px;
+      }
+      
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .form-container {
+        padding: 20px;
+      }
+      
+      .stepper {
+        flex-direction: row;
+        margin-bottom: 30px;
+      }
+      
+      .step {
+        flex-direction: column;
+        align-items: center;
+        min-width: 80px;
+      }
+      
+      .step-circle {
+        margin-right: 0;
+        margin-bottom: 8px;
+        width: 45px;
+        height: 45px;
+      }
+      
+      .step-label {
+        font-size: 0.8rem;
+        text-align: center;
+      }
+    }
+    
+    /* ======= DARK MODE ENHANCEMENTS ======= */
+    [data-theme='dark'] .input-valid {
+      background-color: rgba(16, 185, 129, 0.1) !important;
+    }
+    
+    [data-theme='dark'] .input-invalid {
+      background-color: rgba(239, 68, 68, 0.1) !important;
+    }
+    
+    [data-theme='dark'] .form-blocked::after {
+      background-color: rgba(15, 23, 42, 0.85);
+    }
+    
+    /* ======= IMPRESSÃO ======= */
+    @media print {
+      .theme-toggle,
+      .submit-btn,
+      .tooltip,
+      input[type="file"]::file-selector-button,
+      .blocked-message,
+      .revalidate-btn,
+      .cpf-validation-indicator {
+        display: none !important;
+      }
+      
+      .form-container {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        padding: 20px;
+      }
+      
+      body {
+        background: white;
+        color: black;
+      }
+      
+      fieldset {
+        break-inside: avoid;
+        border: 1px solid #ddd;
+      }
+    }
+  </style>
+</head>
+<body data-theme="light">
+  <div class="app-container">
+    <!-- Botão de Tema -->
+    <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">
+      <i class="fas fa-moon"></i>
+    </button>
+    
+    <!-- Header -->
+    <header class="header">
+      <div class="header-logo" aria-hidden="true">
+        <i class="fas fa-briefcase"></i>
+      </div>
+      <h1>Trabalhe no <span class="highlight">UltraRH</span></h1>
+      <p class="header-subtitle">Preencha o formulário abaixo para se candidatar às nossas vagas. Faça parte do nosso time de sucesso!</p>
+    </header>
+    
+    <!-- Form Container -->
+    <div class="form-container" id="formContainer">
+      <form id="formCurriculo" novalidate>
+        <!-- Stepper -->
+        <div class="stepper" role="tablist" aria-label="Progresso do formulário">
+          <div class="step" id="step1Head" role="tab" aria-selected="true">
+            <div class="step-circle">1</div>
+            <span class="step-label">Dados Pessoais</span>
+          </div>
+          <div class="step" id="step2Head" role="tab" aria-selected="false">
+            <div class="step-circle">2</div>
+            <span class="step-label">Endereço</span>
+          </div>
+          <div class="step" id="step3Head" role="tab" aria-selected="false">
+            <div class="step-circle">3</div>
+            <span class="step-label">Candidatura</span>
+          </div>
+          <div class="step-line" aria-hidden="true"></div>
+          <div class="step-line-fill" id="stepFill" aria-hidden="true"></div>
+        </div>
+        
+        <!-- ETAPA 1: Dados Pessoais -->
+        <fieldset id="fs1" aria-labelledby="step1Head">
+          <legend>
+            <div class="legend-icon">
+              <i class="fas fa-user"></i>
+            </div>
+            <span>Informações Pessoais</span>
+          </legend>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="nome" class="required">Nome Completo</label>
+              <div class="input-wrapper">
+                <i class="fas fa-user input-icon"></i>
+                <input type="text" id="nome" name="nome" required placeholder="Seu nome completo" aria-describedby="nome-help">
+              </div>
+              <span class="help-text" id="nome-help">Digite seu nome completo como no documento</span>
+            </div>
+            
+            <div class="form-group">
+              <label for="cpf" class="required">CPF</label>
+              <div class="input-wrapper">
+                <i class="fas fa-id-card input-icon"></i>
+                <input type="text" id="cpf" name="cpf" required placeholder="000.000.000-00" aria-describedby="cpf-help" data-valid="false">
+                <span class="cpf-validation-indicator" id="cpfValidationIndicator"></span>
+                <button type="button" class="revalidate-btn" id="revalidateCpfBtn" title="Tentar validar novamente">
+                  <i class="fas fa-redo"></i>
+                </button>
+              </div>
+              <span class="help-text" id="cpf-help">Digite apenas números, a formatação é automática</span>
+            </div>
+            
+            <div class="form-group">
+              <label for="telefone" class="required">Telefone</label>
+              <div class="input-wrapper">
+                <i class="fas fa-phone input-icon"></i>
+                <input type="text" id="telefone" name="telefone" required placeholder="(00) 00000-0000" aria-describedby="telefone-help">
+              </div>
+              <span class="help-text" id="telefone-help">Inclua DDD e celular com WhatsApp preferencialmente</span>
+            </div>
+            
+            <div class="form-group">
+              <label for="email" class="required">E-mail</label>
+              <div class="input-wrapper">
+                <i class="fas fa-envelope input-icon"></i>
+                <input type="email" id="email" name="email" required placeholder="seuemail@exemplo.com" aria-describedby="email-help">
+              </div>
+              <span class="help-text" id="email-help">Enviaremos confirmação para este e-mail</span>
+            </div>
+          </div>
+        </fieldset>
+        
+        <!-- ETAPA 2: Endereço -->
+        <fieldset id="fs2" aria-labelledby="step2Head" aria-disabled="true" disabled>
+          <legend>
+            <div class="legend-icon">
+              <i class="fas fa-home"></i>
+            </div>
+            <span>Endereço</span>
+            <div class="tooltip">
+              <i class="fas fa-info-circle tooltip-icon"></i>
+              <span class="tooltip-text">Digite o CEP para preencher automaticamente os campos de endereço. Eles ficarão bloqueados para edição.</span>
+            </div>
+          </legend>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="cep" class="required">CEP</label>
+              <div class="input-wrapper">
+                <i class="fas fa-map-marker-alt input-icon"></i>
+                <input type="text" id="cep" name="cep" required placeholder="00000-000" aria-describedby="cep-help">
+              </div>
+              <span class="help-text" id="cep-help">Digite o CEP para buscar automaticamente seu endereço</span>
+            </div>
+            
+            <div class="form-group">
+              <label for="cidade" class="required">Cidade</label>
+              <div class="input-wrapper">
+                <i class="fas fa-city input-icon"></i>
+                <input type="text" id="cidade" name="cidade" required placeholder="Sua cidade" readonly aria-describedby="cidade-help">
+              </div>
+              <span class="help-text" id="cidade-help">Preenchido automaticamente pelo CEP</span>
+            </div>
+            
+            <div class="form-group">
+              <label for="bairro" class="required">Bairro</label>
+              <div class="input-wrapper">
+                <i class="fas fa-map input-icon"></i>
+                <input type="text" id="bairro" name="bairro" required placeholder="Seu bairro" readonly aria-describedby="bairro-help">
+              </div>
+              <span class="help-text" id="bairro-help">Preenchido automaticamente pelo CEP</span>
+            </div>
+            
+            <div class="form-group">
+              <label for="rua" class="required">Rua</label>
+              <div class="input-wrapper">
+                <i class="fas fa-road input-icon"></i>
+                <input type="text" id="rua" name="rua" required placeholder="Nome da sua rua" readonly aria-describedby="rua-help">
+              </div>
+              <span class="help-text" id="rua-help">Preenchido automaticamente pelo CEP</span>
+            </div>
+          </div>
+        </fieldset>
+        
+        <!-- ETAPA 3: Candidatura -->
+        <fieldset id="fs3" aria-labelledby="step3Head" aria-disabled="true" disabled>
+          <legend>
+            <div class="legend-icon">
+              <i class="fas fa-briefcase"></i>
+            </div>
+            <span>Candidatura</span>
+          </legend>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="transporte" class="required">Possui Transporte Próprio?</label>
+              <div class="input-wrapper">
+                <i class="fas fa-car input-icon"></i>
+                <select id="transporte" name="transporte" required aria-describedby="transporte-help">
+                  <option value="" disabled selected>Selecione uma opção...</option>
+                  <option value="Sim">Sim</option>
+                  <option value="Não">Não</option>
+                </select>
+              </div>
+              <span class="help-text" id="transporte-help">Importante para vagas com deslocamento</span>
+            </div>
+            
+            <div class="form-group">
+              <label for="vaga" class="required">Vaga Desejada</label>
+              <div class="input-wrapper">
+                <i class="fas fa-briefcase input-icon"></i>
+                <select id="vaga" name="vaga" required aria-describedby="vaga-help">
+                  <option value="" disabled selected>Carregando vagas disponíveis...</option>
+                </select>
+              </div>
+              <span class="help-text" id="vaga-help">Vagas carregadas do nosso sistema</span>
+            </div>
+            
+            <div class="form-group" style="grid-column: 1 / -1;">
+              <label for="arquivo" class="required">Anexar Currículo</label>
+              <div class="input-wrapper">
+                <i class="fas fa-file-upload input-icon"></i>
+                <input type="file" id="arquivo" name="arquivo" accept=".pdf,.doc,.docx" required aria-describedby="arquivo-help">
+              </div>
+              <span class="help-text" id="arquivo-help">Formatos aceitos: PDF, DOC, DOCX | Tamanho máximo: 5MB</span>
+            </div>
+          </div>
+        </fieldset>
+        
+        <!-- Botão de Envio -->
+        <div class="submit-section">
+          <button type="submit" id="submitButton" class="submit-btn" disabled aria-label="Enviar candidatura">
+            <i class="fas fa-paper-plane btn-icon"></i>
+            <span class="btn-text">Enviar Candidatura</span>
+            <span class="spinner hidden"></span>
+          </button>
+        </div>
+        
+        <!-- Mensagens -->
+        <div class="message success hidden" id="mensagemSucesso" role="alert"></div>
+        <div class="message error hidden" id="mensagemErro" role="alert"></div>
+      </form>
+      
+      <!-- Overlay de bloqueio quando CPF é inválido -->
+      <div class="form-blocked-overlay hidden" id="formBlockedOverlay">
+        <div class="blocked-message">
+          <button type="button" class="close-blocked-btn" onclick="showFormBlockedOverlay(false)" title="Fechar aviso">
+            <i class="fas fa-times"></i>
+          </button>
+          <div style="font-size: 3rem; color: var(--danger); margin-bottom: 20px;">
+            <i class="fas fa-exclamation-circle"></i>
+          </div>
+          <h3>Validação de Documento</h3>
+          <p>Identificamos uma inconsistência no CPF informado. O documento não foi localizado na base de dados da Receita Federal ou não atende aos critérios de validação matemática.</p>
+          <p>A regularidade do CPF é um requisito indispensável para a continuidade do seu processo de candidatura.</p>
+          <div style="margin-top: 25px; padding: 18px; background: var(--bg); border-radius: var(--radius-md); font-size: 0.9rem; color: var(--text-secondary); border-left: 4px solid var(--primary); text-align: left;">
+            <i class="fas fa-info-circle" style="color: var(--primary); margin-right: 8px;"></i> <strong>Instruções:</strong> Verifique os dígitos informados e utilize o botão de revalidação <i class="fas fa-redo"></i> localizado junto ao campo do CPF para processar os dados novamente.
+          </div>
+          <button type="button" class="btn-modal-action" onclick="showFormBlockedOverlay(false)">
+            Compreendido, irei revisar
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-logo">
+        <span>UltraRH</span>
+      </div>
+      <p>© 2024 UltraRH e Home Center. Todos os direitos reservados.</p>
+      <p style="margin-top: 8px; font-size: 0.85rem; opacity: 0.8;">
+        Seus dados estão seguros conosco. Política de Privacidade.
+      </p>
+    </footer>
+  </div>
+
+  <script src="https://unpkg.com/imask"></script>
+  <script>
+    // ====== CONFIGURAÇÕES ======
+    const API_BASE = "https://candidatos.onrender.com";
+    const FILE_MAX_MB = 5;
+    const VAGAS_GITHUB_URL = "https://raw.githubusercontent.com/PopularAtacarejo/Candidatos/main/vagas.json";
+    const DEFAULT_VAGAS = [
+      { nome: "Auxiliar de Limpeza" },
+      { nome: "Vendedor" },
+      { nome: "Caixa" },
+      { nome: "Estoquista" },
+      { nome: "Repositor" },
+      { nome: "Atendente" },
+      { nome: "Gerente" },
+      { nome: "Supervisor" },
+      { nome: "Operador de Caixa" }
+    ];
+
+    // ====== ELEMENTOS DOM ======
+    const form = document.getElementById("formCurriculo");
+    const themeToggle = document.getElementById("themeToggle");
+    const formContainer = document.getElementById("formContainer");
+    const formBlockedOverlay = document.getElementById("formBlockedOverlay");
+    
+    // Campos do formulário
+    const nome = document.getElementById("nome");
+    const cpf = document.getElementById("cpf");
+    const telefone = document.getElementById("telefone");
+    const email = document.getElementById("email");
+    const cep = document.getElementById("cep");
+    const cidade = document.getElementById("cidade");
+    const bairro = document.getElementById("bairro");
+    const rua = document.getElementById("rua");
+    const transporte = document.getElementById("transporte");
+    const vaga = document.getElementById("vaga");
+    const arquivo = document.getElementById("arquivo");
+    
+    // Botões e mensagens
+    const submitBtn = document.getElementById("submitButton");
+    const btnText = submitBtn.querySelector(".btn-text");
+    const spinner = submitBtn.querySelector(".spinner");
+    const successMsg = document.getElementById("mensagemSucesso");
+    const errorMsg = document.getElementById("mensagemErro");
+    const revalidateCpfBtn = document.getElementById("revalidateCpfBtn");
+    
+    // Steps
+    const step1Head = document.getElementById("step1Head");
+    const step2Head = document.getElementById("step2Head");
+    const step3Head = document.getElementById("step3Head");
+    const stepFill = document.getElementById("stepFill");
+    const fs1 = document.getElementById("fs1");
+    const fs2 = document.getElementById("fs2");
+    const fs3 = document.getElementById("fs3");
+
+    // ====== ESTADO DA VALIDAÇÃO DO CPF ======
+    let cpfValidationState = {
+      isValid: false,
+      isChecking: false,
+      lastValidation: null,
+      cpfValue: ''
+    };
+
+    // ====== TEMA ======
+    themeToggle.addEventListener("click", () => {
+      const currentTheme = document.body.getAttribute("data-theme");
+      const newTheme = currentTheme === "light" ? "dark" : "light";
+      document.body.setAttribute("data-theme", newTheme);
+      
+      const icon = themeToggle.querySelector("i");
+      icon.className = newTheme === "dark" ? "fas fa-sun" : "fas fa-moon";
+      
+      // Salvar preferência
+      localStorage.setItem("theme", newTheme);
+    });
+
+    // Carregar tema salvo
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      document.body.setAttribute("data-theme", savedTheme);
+      const icon = themeToggle.querySelector("i");
+      icon.className = savedTheme === "dark" ? "fas fa-sun" : "fas fa-moon";
+    }
+
+    // ====== MÁSCARAS ======
+    const cpfMask = IMask(cpf, { 
+      mask: "000.000.000-00",
+      lazy: false
+    });
+    
+    const cepMask = IMask(cep, { 
+      mask: "00000-000",
+      lazy: false
+    });
+    
+    const telefoneMask = IMask(telefone, { 
+      mask: [
+        {mask: "(00) 0000-0000"},
+        {mask: "(00) 00000-0000"}
+      ],
+      lazy: false
+    });
+
+    // ====== VALIDAÇÃO DE CPF NA RECEITA FEDERAL (OBRIGATÓRIA) ======
+    const cpfValidationIndicator = document.getElementById('cpfValidationIndicator');
+    let cpfValidationTimeout = null;
+
+    function showFormBlockedOverlay(show) {
+      if (show) {
+        formBlockedOverlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // Impede o scroll ao fundo
+      } else {
+        formBlockedOverlay.classList.add('hidden');
+        document.body.style.overflow = ''; // Restaura o scroll
+        
+        // Se estiver fechando (show === false) e o CPF for inválido, limpa o campo
+        const cpfInput = document.getElementById('cpf');
+        if (cpfInput && cpfInput.getAttribute('data-valid') === 'false') {
+          cpfInput.value = '';
+          cpfInput.focus();
+          
+          // Resetar o indicador visual
+          const indicator = document.getElementById('cpfValidationIndicator');
+          if (indicator) indicator.className = 'cpf-validation-indicator';
+          
+          const help = document.getElementById('cpf-help');
+          if (help) {
+            help.textContent = 'Digite apenas números, a formatação é automática';
+            help.className = 'help-text';
+          }
+          
+          updateSteps();
+        }
+      }
+    }
+
+    function updateCPFValidationUI(isValid, isChecking = false, errorMessage = '') {
+      const cpfHelp = document.getElementById('cpf-help');
+      
+      if (isChecking) {
+        cpfValidationIndicator.className = 'cpf-validation-indicator loading';
+        cpf.classList.remove('input-valid', 'input-invalid');
+        cpfHelp.textContent = 'Validando CPF na Receita Federal...';
+        cpfHelp.className = 'help-text';
+        cpfValidationState.isChecking = true;
+        return;
+      }
+      
+      if (isValid) {
+        cpfValidationIndicator.className = 'cpf-validation-indicator valid';
+        cpfValidationIndicator.innerHTML = '✓';
+        cpf.classList.add('input-valid');
+        cpf.classList.remove('input-invalid');
+        cpfHelp.textContent = 'CPF válido na base da Receita Federal';
+        cpfHelp.className = 'help-text success';
+        cpf.setAttribute('data-valid', 'true');
+        cpfValidationState.isValid = true;
+        cpfValidationState.isChecking = false;
+        showFormBlockedOverlay(false);
+      } else {
+        cpfValidationIndicator.className = 'cpf-validation-indicator invalid';
+        cpfValidationIndicator.innerHTML = '✗';
+        cpf.classList.add('input-invalid');
+        cpf.classList.remove('input-valid');
+        cpfHelp.textContent = errorMessage || 'CPF não encontrado na base da Receita Federal';
+        cpfHelp.className = 'help-text error';
+        cpf.setAttribute('data-valid', 'false');
+        cpfValidationState.isValid = false;
+        cpfValidationState.isChecking = false;
+        showFormBlockedOverlay(true);
+      }
+      
+      // Atualizar o botão de revalidação
+      if (!isValid && !isChecking) {
+        revalidateCpfBtn.style.display = 'block';
+      } else {
+        revalidateCpfBtn.style.display = 'none';
+      }
+      
+      updateSteps();
+    }
+
+    function isValidCPFLocal(cpf) {
+      if (typeof cpf !== 'string') return false;
+      cpf = cpf.replace(/[^\d]+/g, '');
+      if (cpf.length !== 11 || !!cpf.match(/(\d)\1{10}/)) return false;
+      cpf = cpf.split('').map(el => +el);
+      const rest = (count) => (cpf.slice(0, count-12).reduce((soma, el, index) => (soma + el * (count-index)), 0) * 10) % 11 % 10;
+      return rest(10) === cpf[9] && rest(11) === cpf[10];
+    }
+
+    async function validateCPF(cpfValue) {
+      // Limpar o timeout anterior
+      if (cpfValidationTimeout) {
+        clearTimeout(cpfValidationTimeout);
+      }
+
+      // Remover caracteres não numéricos
+      const cpfDigits = cpfValue.replace(/\D/g, '');
+
+      // Verificar se tem 11 dígitos
+      if (cpfDigits.length !== 11) {
+        // Não mostrar erro enquanto o usuário ainda está digitando
+        return false;
+      }
+
+      // Verificar se é o mesmo CPF já validado
+      if (cpfValidationState.cpfValue === cpfDigits && cpfValidationState.isValid) {
+        updateCPFValidationUI(true);
+        return true;
+      }
+
+      // Mostrar indicador de carregamento
+      updateCPFValidationUI(false, true);
+
+      return new Promise((resolve) => {
+        cpfValidationTimeout = setTimeout(async () => {
+          try {
+            const response = await fetch(`https://scpa-backend.saude.gov.br/public/scpa-usuario/validacao-cpf/${cpfDigits}`, {
+              method: 'GET',
+              headers: {
+                'Accept': 'application/json',
+              },
+              cache: 'no-store'
+            });
+
+            const data = await response.json();
+
+            // A API retorna 200 e true se o CPF for válido e NÃO estiver cadastrado no SCPA
+            // A API retorna 400 e uma mensagem específica se o CPF for válido mas JÁ estiver cadastrado
+            // A API retorna 400 e "não encontrado" se o CPF for inválido ou inexistente
+            
+            const alreadyRegistered = data && data[0] && data[0].error === "cpf-possui-cadastro-scpa";
+            const notFound = data && data[0] && data[0].error === "cpf-nao-encotrado-receita-federal";
+
+            if (response.ok && data === true) {
+              // CPF válido e novo no sistema
+              updateCPFValidationUI(true);
+              cpfValidationState.cpfValue = cpfDigits;
+              cpfValidationState.lastValidation = new Date();
+              resolve(true);
+            } else if (alreadyRegistered) {
+              // CPF válido mas já cadastrado (ainda é um CPF válido para o formulário)
+              updateCPFValidationUI(true);
+              cpfValidationState.cpfValue = cpfDigits;
+              cpfValidationState.lastValidation = new Date();
+              resolve(true);
+            } else {
+              // CPF realmente inválido ou outro erro
+              const errorMessage = (data && data[0] && data[0].message) || "CPF informado não foi encontrado na base de dados da Receita Federal.";
+              updateCPFValidationUI(false, false, errorMessage);
+              cpfValidationState.cpfValue = cpfDigits;
+              resolve(false);
+            }
+          } catch (error) {
+            console.error('Erro ao validar CPF:', error);
+            // Fallback para validação local se a API falhar
+            if (isValidCPFLocal(cpfDigits)) {
+              updateCPFValidationUI(true);
+              cpfValidationState.cpfValue = cpfDigits;
+              cpfValidationState.lastValidation = new Date();
+              resolve(true);
+            } else {
+              updateCPFValidationUI(false, false, 'CPF inválido. Verifique os dados informados.');
+              resolve(false);
+            }
+          }
+        }, 800);
+      });
+    }
+
+    // Adicionar evento de blur no campo CPF
+    cpf.addEventListener('blur', async () => {
+      if (cpf.value.trim() !== '' && cpf.value.length === 14) {
+        await validateCPF(cpf.value);
+      }
+    });
+
+    // Validar ao digitar quando o CPF estiver completo
+    cpf.addEventListener('input', () => {
+      // Resetar a validação anterior
+      cpfValidationIndicator.className = 'cpf-validation-indicator';
+      cpf.classList.remove('input-valid', 'input-invalid');
+      cpf.setAttribute('data-valid', 'false');
+      
+      // Resetar estado
+      cpfValidationState.isValid = false;
+      cpfValidationState.cpfValue = '';
+      
+      // Resetar mensagem de ajuda
+      const cpfHelp = document.getElementById('cpf-help');
+      cpfHelp.textContent = 'Digite apenas números, a formatação é automática';
+      cpfHelp.className = 'help-text';
+      
+      // Esconder o botão de revalidação
+      revalidateCpfBtn.style.display = 'none';
+      
+      // Remover overlay de bloqueio
+      showFormBlockedOverlay(false);
+      
+      // Se o CPF estiver completo (com a máscara, tem 14 caracteres), validar
+      if (cpf.value.length === 14) {
+        validateCPF(cpf.value);
+      }
+      
+      updateSteps();
+    });
+
+    // Botão para revalidar CPF
+    revalidateCpfBtn.addEventListener('click', async () => {
+      if (cpf.value.length === 14) {
+        await validateCPF(cpf.value);
+      }
+    });
+
+    // ====== VIACEP COM AUTO-PREENCHIMENTO ======
+    let cepTimeout;
+    let cepLoading = false;
+
+    cep.addEventListener("input", () => {
+      clearTimeout(cepTimeout);
+      
+      // Limpar campos se CEP estiver incompleto
+      const cepValue = cep.value.replace(/\D/g, "");
+      if (cepValue.length < 8) {
+        resetAddressFields();
+        return;
+      }
+
+      // Mostrar loading no CEP
+      cep.classList.add("cep-loading");
+      cepLoading = true;
+
+      cepTimeout = setTimeout(async () => {
+        if (cepValue.length !== 8) {
+          resetAddressFields();
+          cep.classList.remove("cep-loading");
+          cepLoading = false;
+          return;
+        }
+
+        try {
+          const response = await fetch(`https://viacep.com.br/ws/${cepValue}/json/`, {
+            cache: "no-store"
+          });
+
+          if (!response.ok) throw new Error("CEP não encontrado");
+
+          const data = await response.json();
+
+          if (data.erro) {
+            showError("CEP não encontrado. Verifique e tente novamente.");
+            resetAddressFields();
+          } else {
+            // Preencher campos automaticamente
+            cidade.value = data.localidade || "";
+            bairro.value = data.bairro || "";
+            rua.value = data.logradouro || "";
+            
+            // Adicionar classes de sucesso
+            cidade.classList.add("cep-success");
+            bairro.classList.add("cep-success");
+            rua.classList.add("cep-success");
+            
+            // Adicionar tooltip
+            const tooltipText = "Preenchido automaticamente pelo CEP";
+            cidade.title = tooltipText;
+            bairro.title = tooltipText;
+            rua.title = tooltipText;
+            
+            // Mostrar confirmação
+            showTemporaryMessage("✅ Endereço preenchido automaticamente!", "success");
+            
+            // Focar no próximo campo
+            setTimeout(() => transporte.focus(), 300);
+          }
+        } catch (error) {
+          showError("❌ Erro ao buscar CEP. Tente novamente.");
+          resetAddressFields();
+        } finally {
+          cep.classList.remove("cep-loading");
+          cepLoading = false;
+          updateSteps();
+        }
+      }, 800);
+    });
+
+    function resetAddressFields() {
+      cidade.value = "";
+      bairro.value = "";
+      rua.value = "";
+      cidade.classList.remove("cep-success");
+      bairro.classList.remove("cep-success");
+      rua.classList.remove("cep-success");
+      updateSteps();
+    }
+
+    // ====== CARREGAR VAGAS DIRETO DO GITHUB ======
+    async function loadVagasFromGitHub() {
+      const selectVaga = document.getElementById('vaga');
+      const label = document.querySelector('label[for="vaga"]');
+
+      selectVaga.disabled = true;
+      selectVaga.innerHTML = '<option value="" disabled selected>Carregando vagas disponíveis...</option>';
+
+      let vagasData = [];
+      let fallbackUsed = false;
+
+      try {
+        const response = await fetch(VAGAS_GITHUB_URL, {
+          cache: "no-store"
+        });
+
+        if (response.ok) {
+          vagasData = await response.json();
+        } else {
+          console.warn("Erro ao carregar vagas públicas:", response.status);
+        }
+      } catch (error) {
+        console.error("Erro ao carregar vagas públicas:", error);
+      }
+
+      const preparedVagas = (vagasData || []).map(vaga => {
+        if (typeof vaga === 'string') {
+          return { nome: vaga };
+        }
+        return vaga && typeof vaga === 'object' ? vaga : null;
+      }).filter(Boolean);
+
+      const finalVagas = preparedVagas.length ? preparedVagas : [...DEFAULT_VAGAS];
+      fallbackUsed = finalVagas === preparedVagas ? false : true;
+
+      selectVaga.innerHTML = '<option value="" disabled selected>Selecione a vaga desejada...</option>';
+      selectVaga.disabled = false;
+
+      finalVagas
+        .slice()
+        .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'))
+        .forEach(vaga => {
+          const option = document.createElement('option');
+          option.value = vaga.nome;
+          option.textContent = vaga.nome;
+          selectVaga.appendChild(option);
+        });
+
+      if (label) {
+        label.querySelectorAll('.vaga-counter, .vaga-info').forEach(el => el.remove());
+
+        const vagaCount = document.createElement('small');
+        vagaCount.className = 'vaga-counter';
+        vagaCount.style.cssText = 'display: block; margin-top: 5px; font-size: 0.85rem; color: var(--text-secondary);';
+        vagaCount.textContent = `${finalVagas.length} vagas disponíveis`;
+        label.appendChild(vagaCount);
+
+        if (fallbackUsed) {
+          const warning = document.createElement('small');
+          warning.className = 'vaga-info';
+          warning.style.cssText = 'display: block; margin-top: 5px; font-size: 0.75rem; color: var(--warning);';
+          warning.textContent = 'Usando lista local de vagas';
+          label.appendChild(warning);
+        }
+      }
+
+      updateSteps();
+    }
+
+    // ====== UTILITÁRIOS ======
+    function showMessage(element, message) {
+      element.textContent = message;
+      element.classList.remove("hidden");
+      element.style.display = "block";
+      
+      // Scroll para mensagem
+      element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      
+      if (element === successMsg) {
+        errorMsg.classList.add("hidden");
+        errorMsg.style.display = "none";
+      } else {
+        successMsg.classList.add("hidden");
+        successMsg.style.display = "none";
+      }
+    }
+
+    function showTemporaryMessage(message, type = "success") {
+      const element = type === "success" ? successMsg : errorMsg;
+      showMessage(element, message);
+      
+      // Auto-remover após 5 segundos
+      setTimeout(() => {
+        element.classList.add("hidden");
+        element.style.display = "none";
+      }, 5000);
+    }
+
+    function hideMessages() {
+      [successMsg, errorMsg].forEach(msg => {
+        msg.classList.add("hidden");
+        msg.style.display = "none";
+      });
+    }
+
+    function showError(message) {
+      showMessage(errorMsg, message);
+    }
+
+    function showSuccess(message) {
+      showMessage(successMsg, message);
+    }
+
+    function setLoading(isLoading) {
+      if (isLoading) {
+        btnText.classList.add("hidden");
+        spinner.classList.remove("hidden");
+        submitBtn.disabled = true;
+        submitBtn.classList.add("loading");
+      } else {
+        btnText.classList.remove("hidden");
+        spinner.classList.add("hidden");
+        submitBtn.classList.remove("loading");
+        updateSteps();
+      }
+    }
+
+    function validateFile() {
+      const file = arquivo.files?.[0];
+      
+      if (!file) {
+        showError("❌ Selecione um arquivo para o currículo.");
+        return false;
+      }
+
+      const allowedTypes = [
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      ];
+      
+      const ext = file.name.toLowerCase().split('.').pop();
+      
+      if (!allowedTypes.includes(file.type) && !['pdf', 'doc', 'docx'].includes(ext)) {
+        showError("❌ Formato de arquivo inválido. Use PDF, DOC ou DOCX.");
+        return false;
+      }
+
+      if (file.size > FILE_MAX_MB * 1024 * 1024) {
+        showError(`❌ Arquivo muito grande. Tamanho máximo: ${FILE_MAX_MB} MB.`);
+        return false;
+      }
+
+      return true;
+    }
+
+    function createFormData() {
+      const formData = new FormData();
+      formData.append("nome", nome.value.trim());
+      formData.append("cpf", cpf.value);
+      formData.append("telefone", telefone.value);
+      formData.append("email", email.value.trim().toLowerCase());
+      formData.append("cep", cep.value);
+      formData.append("cidade", cidade.value);
+      formData.append("bairro", bairro.value);
+      formData.append("rua", rua.value);
+      formData.append("transporte", transporte.value);
+      formData.append("vaga", vaga.value);
+      formData.append("arquivo", arquivo.files[0]);
+      return formData;
+    }
+
+    async function fetchWithTimeout(url, options = {}, timeout = 30000) {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+      try {
+        const response = await fetch(url, {
+          ...options,
+          signal: controller.signal,
+          cache: "no-store"
+        });
+        return response;
+      } finally {
+        clearTimeout(timeoutId);
+      }
+    }
+
+    // ====== VALIDAÇÃO POR ETAPA ======
+    const step1Fields = [nome, cpf, telefone, email];
+    const step2Fields = [cep, cidade, bairro, rua];
+    const step3Fields = [transporte, vaga, arquivo];
+
+    function isFieldValid(field) {
+      // Caso especial para CPF: deve ter sido validado com sucesso na Receita Federal
+      if (field.id === 'cpf') {
+        // Se o campo está vazio, não é válido
+        if (field.value.trim().length === 0) return false;
+        
+        // Se não tem 14 caracteres (formato completo), não é válido
+        if (field.value.length !== 14) return false;
+        
+        // Deve ter o atributo data-valid como true (validado na API)
+        return field.getAttribute('data-valid') === 'true';
+      }
+      
+      if (field.type === 'email') {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(field.value.trim());
+      }
+      
+      if (field.tagName === 'SELECT') {
+        return !!field.value;
+      }
+      
+      if (field.type === 'file') {
+        return !!field.files?.length;
+      }
+      
+      if (field.hasAttribute('readonly')) {
+        return field.value.trim().length > 0;
+      }
+      
+      return field.value.trim().length > 0;
+    }
+
+    function setFieldsetState(fieldset, enabled) {
+      if (enabled) {
+        fieldset.removeAttribute('disabled');
+        fieldset.setAttribute('aria-disabled', 'false');
+        fieldset.style.opacity = '1';
+        fieldset.style.filter = 'none';
+      } else {
+        fieldset.setAttribute('disabled', '');
+        fieldset.setAttribute('aria-disabled', 'true');
+        fieldset.style.opacity = '0.6';
+        fieldset.style.filter = 'grayscale(0.3)';
+      }
+    }
+
+    function updateStepVisual(stepElement, state) {
+      stepElement.classList.remove('active', 'done', 'disabled');
+      stepElement.classList.add(state);
+    }
+
+    function updateSteps() {
+      const step1Valid = step1Fields.every(isFieldValid);
+      const step2Valid = step1Valid && step2Fields.every(isFieldValid);
+      const step3Valid = step2Valid && step3Fields.every(isFieldValid);
+
+      // Ativar/desativar fieldsets
+      setFieldsetState(fs2, step1Valid);
+      setFieldsetState(fs3, step2Valid);
+
+      // Atualizar visual dos steps
+      updateStepVisual(step1Head, step1Valid ? 'done' : 'active');
+      updateStepVisual(step2Head, step1Valid ? (step2Valid ? 'done' : 'active') : 'disabled');
+      updateStepVisual(step3Head, step2Valid ? (step3Valid ? 'done' : 'active') : 'disabled');
+
+      // Atualizar barra de progresso
+      const progress = step1Valid ? (step2Valid ? (step3Valid ? 100 : 66) : 33) : 0;
+      stepFill.style.width = `${progress}%`;
+
+      // Ativar/desativar botão de envio
+      submitBtn.disabled = !step3Valid;
+    }
+
+    // Validação visual em tempo real
+    function setupFieldValidation(field) {
+      const eventType = field.type === 'file' ? 'change' : 'input';
+      
+      field.addEventListener(eventType, function() {
+        if (this.value.trim() === '') {
+          this.classList.remove('input-valid', 'input-invalid');
+        } else if (isFieldValid(this)) {
+          this.classList.add('input-valid');
+          this.classList.remove('input-invalid');
+        } else {
+          this.classList.add('input-invalid');
+          this.classList.remove('input-valid');
+        }
+        updateSteps();
+      });
+      
+      // Validação ao perder o foco
+      if (field.type !== 'file') {
+        field.addEventListener('blur', function() {
+          if (this.value.trim() !== '' && !isFieldValid(this)) {
+            this.classList.add('input-invalid');
+            this.classList.remove('input-valid');
+          }
+        });
+      }
+    }
+
+    // Aplicar validação a todos os campos
+    [...step1Fields, ...step2Fields, transporte, arquivo].forEach(setupFieldValidation);
+    vaga.addEventListener('change', () => {
+      setupFieldValidation(vaga);
+      updateSteps();
+    });
+
+    // ====== INICIALIZAÇÃO ======
+    document.addEventListener('DOMContentLoaded', () => {
+      // Carregar vagas
+      loadVagasFromGitHub();
+      
+      // Inicializar validação
+      updateSteps();
+      
+      // Focar no primeiro campo
+      setTimeout(() => {
+        nome.focus();
+        nome.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 500);
+      
+    });
+
+    // ====== ENVIO DO FORMULÁRIO ======
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      hideMessages();
+
+      // Verificar se o CPF está válido antes de enviar
+      if (cpf.getAttribute('data-valid') !== 'true') {
+        showError("❌ É necessário informar um CPF válido para prosseguir.");
+        cpf.focus();
+        return;
+      }
+
+      // Validar arquivo
+      if (!validateFile()) {
+        updateSteps();
+        return;
+      }
+
+      setLoading(true);
+
+      // Enviar dados
+      let response, data = {};
+      try {
+        response = await fetchWithTimeout(
+          `${API_BASE}/api/enviar`,
+          {
+            method: "POST",
+            body: createFormData()
+          },
+          60000
+        );
+
+        try {
+          data = await response.json();
+        } catch (parseError) {
+          console.error("Erro ao parsear resposta:", parseError);
+        }
+      } catch (networkError) {
+        setLoading(false);
+        showError("❌ Erro de conexão. Verifique sua internet e tente novamente.");
+        return;
+      }
+
+      setLoading(false);
+
+      if (response.status === 409) {
+        showError(data?.detail || "⚠️ Já existe uma candidatura para esta vaga com seu CPF. Aguarde 90 dias para reenviar.");
+        return;
+      }
+
+      if (!response.ok) {
+        const errorText = data?.detail || data?.message || "❌ Erro ao enviar candidatura. Tente novamente.";
+        showError(errorText);
+        return;
+      }
+
+      // Sucesso!
+      showSuccess(data?.message || "✅ Candidatura enviada com sucesso! Entraremos em contato em breve.");
+      
+      // Resetar formulário
+      form.reset();
+      resetAddressFields();
+      
+      // Resetar máscaras
+      cpfMask.update("");
+      cepMask.update("");
+      telefoneMask.update("");
+      
+      // Resetar validação de CPF
+      cpfValidationIndicator.className = 'cpf-validation-indicator';
+      cpf.setAttribute('data-valid', 'false');
+      const cpfHelp = document.getElementById('cpf-help');
+      cpfHelp.textContent = 'Digite apenas números, a formatação é automática';
+      cpfHelp.className = 'help-text';
+      
+      // Resetar estado da validação
+      cpfValidationState.isValid = false;
+      cpfValidationState.cpfValue = '';
+      
+      // Esconder overlay de bloqueio
+      showFormBlockedOverlay(false);
+      
+      // Resetar classes de validação
+      document.querySelectorAll('.input-valid, .input-invalid').forEach(el => {
+        el.classList.remove('input-valid', 'input-invalid');
+      });
+      
+      // Atualizar steps
+      updateSteps();
+      
+      // Recarregar vagas
+      setTimeout(loadVagasFromGitHub, 2000);
+      
+      // Focar no primeiro campo novamente
+      setTimeout(() => nome.focus(), 1000);
+      
+      // Scroll para topo
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // ====== HOTKEYS ======
+    document.addEventListener('keydown', (e) => {
+      // Ctrl + Enter para enviar
+      if (e.ctrlKey && e.key === 'Enter' && !submitBtn.disabled) {
+        submitBtn.click();
+      }
+      
+      // Esc para limpar
+      if (e.key === 'Escape') {
+        hideMessages();
+      }
+    });
+
+    // ====== DETECTAR DISPOSITIVO TOUCH ======
+    let isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
+    if (isTouchDevice) {
+      document.body.classList.add('touch-device');
+      // Ajustes para melhor experiência touch
+      inputFields = document.querySelectorAll('input, select, textarea');
+      inputFields.forEach(input => {
+        input.addEventListener('touchstart', function() {
+          this.style.fontSize = '16px'; // Prevenir zoom no iOS
+        });
+      });
+    }
+  </script>
+</body>
+</html>

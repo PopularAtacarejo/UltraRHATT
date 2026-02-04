@@ -1,0 +1,30 @@
+[
+  {
+    "nome": "Analista de Marketing",
+    "codigo_cbo": "8485-05",
+    "descricao": "",
+    "id": "62d2bbd740a7486f85487dd6d2ed5c39",
+    "salvo_em": "2026-01-30T19:44:34.375807"
+  },
+  {
+    "nome": "Abacaxicultor",
+    "codigo_cbo": "6125-10",
+    "descricao": "",
+    "id": "1e11368e5f7c49df86ceb21107f308be",
+    "salvo_em": "2026-02-03T12:17:45.926329"
+  },
+  {
+    "id": "funcao-1",
+    "nome": "Analista de Recursos Humanos",
+    "codigo_cbo": "252105",
+    "descricao": "Coordena recrutamento, seleção e desenvolvimento de pessoas.",
+    "salvo_em": "2025-01-01T10:00:00Z"
+  },
+  {
+    "id": "funcao-2",
+    "nome": "Assistente Financeiro",
+    "codigo_cbo": "410205",
+    "descricao": "Apoia rotinas financeiras, conciliações e fechamento contábil.",
+    "salvo_em": "2025-01-01T11:00:00Z"
+  }
+]

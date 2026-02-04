@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aton Assistant Widget</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+    <main class="h-screen w-full flex items-center justify-center" style="background:#020617;color:#f8fafc;">
+        <div class="text-center space-y-4" style="max-width:30rem;">
+            <h1 class="text-3xl font-semibold">Aton Assistant</h1>
+            <p>
+                O widget do Aton é entregue via <code>scripts/aton-widget.js</code> e injeta o ícone + painel suspenso em qualquer página.
+                Como este arquivo carrega apenas o script, ele evita conflitos com dados existentes no DOM.
+            </p>
+            <p class="text-sm text-slate-400">
+                Para habilitar o widget em outras páginas, basta incluir <code>&lt;script src="scripts/aton-widget.js" defer&gt;&lt;/script&gt;</code> logo antes do fechamento de <code>&lt;/body&gt;</code>.
+            </p>
+        </div>
+    </main>
+    <script src="scripts/aton-widget.js" defer></script>
+</body>
+</html>

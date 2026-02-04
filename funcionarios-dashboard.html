@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Funcionários</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3B82F6",
+                        "accent": "#8B5CF6",
+                        "bg-dark": "#030712",
+                        "surface-dark": "#0F172A",
+                        "surface-elevated": "#1E293B",
+                        "border-dark": "#334155",
+                        "text-main": "#F1F5F9",
+                        "text-dim": "#94A3B8",
+                        "success": "#10B981",
+                        "warning": "#F59E0B",
+                        "danger": "#EF4444"
+                    },
+                    fontFamily: {
+                        "sans": ["Plus Jakarta Sans", "Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"]
+                    },
+                    boxShadow: {
+                        "glow-primary": "0 0 25px rgba(59, 130, 246, 0.25)",
+                        "glow-accent": "0 0 25px rgba(139, 92, 246, 0.25)"
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer base {
+            body {
+                @apply bg-bg-dark text-text-main font-sans antialiased selection:bg-primary/30;
+            }
+        }
+        .glass {
+            @apply backdrop-blur-md bg-surface-dark/80 border border-white/5;
+        }
+        .chart-card {
+            @apply glass rounded-3xl border border-white/10 p-6 min-h-[260px];
+        }
+        .chart-card canvas {
+            width: 100% !important;
+            height: 240px !important;
+        }
+        .stat-card {
+            @apply glass rounded-3xl border border-white/10 p-5 flex flex-col gap-3;
+        }
+        .badge-pill {
+            @apply inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] uppercase tracking-[0.3em] font-semibold bg-white/5 border border-white/10 text-text-dim;
+        }
+        .table-wrapper {
+            @apply glass rounded-3xl border border-white/10 p-6 overflow-x-auto;
+        }
+        .sidebar-item {
+            @apply flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 text-text-dim hover:text-white hover:bg-white/5;
+        }
+        .event-card {
+            @apply glass rounded-2xl border border-white/10 p-4 space-y-2;
+        }
+        .event-card strong {
+            @apply text-lg font-semibold text-white;
+        }
+        .event-card small {
+            @apply text-[10px] uppercase tracking-[0.3em] text-text-dim;
+        }
+        .event-scope {
+            @apply text-[10px] uppercase tracking-[0.3em] text-text-dim;
+        }
+    </style>
+
+    <style>
+        .brand-bolt-wrap {
+            position: relative;
+        }
+        .brand-bolt-wrap::after {
+            content: "";
+            position: absolute;
+            inset: -6px;
+            border-radius: 18px;
+            background: radial-gradient(circle at 40% 30%, rgba(250, 204, 21, 0.85), rgba(250, 204, 21, 0.25) 45%, rgba(250, 204, 21, 0) 70%);
+            filter: blur(10px);
+            opacity: 0.0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .brand-bolt-wrap:hover::after {
+            opacity: 1;
+        }
+        .brand-bolt {
+            color: #facc15;
+            filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.9)) drop-shadow(0 0 22px rgba(250, 204, 21, 0.7));
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+        .brand-bolt-wrap:hover .brand-bolt {
+            transform: scale(1.18) rotate(-2deg);
+            filter: drop-shadow(0 0 16px rgba(250, 204, 21, 1)) drop-shadow(0 0 34px rgba(250, 204, 21, 0.85));
+        }
+    </style>
+
+
+    <style>
+        .brand-bolt-wrap::after { display: none; }
+        .brand-initials {
+            font-weight: 800;
+            font-size: 0.9rem;
+            letter-spacing: 0.12em;
+            color: #e2e8f0;
+            text-transform: uppercase;
+        }
+    </style>
+
+</head>
+<body class="flex h-screen overflow-hidden">
+    <aside class="w-72 glass border-r border-border-dark flex flex-col p-6 z-50" data-sidebar-active="dashboard">
+        <div class="flex items-center gap-4 mb-10 px-2">
+            <div>
+                <h1 class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white to-text-dim bg-clip-text text-transparent">UltraRH</h1>
+                <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">Admin Panel</p>
+            </div>
+        </div>
+                <nav id="sidebar-links" class="flex-1 space-y-2 overflow-y-auto pr-2">
+        </nav>
+        <div class="mt-auto pt-6 border-t border-border-dark space-y-2">
+            <button onclick="cleanupCandidates()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-text-dim hover:text-danger hover:bg-danger/5 transition-all text-sm font-medium">
+                <span class="material-symbols-rounded">delete_sweep</span>
+                Limpar Expirados
+            </button>
+            <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-text-dim hover:text-white hover:bg-white/5 transition-all text-sm font-medium">
+                <span class="material-symbols-rounded">logout</span>
+                Sair do sistema
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col min-w-0 bg-bg-dark relative overflow-hidden">
+        <div class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>
+        <div class="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <header class="h-20 glass border-b border-border-dark flex items-center justify-between px-8 z-40">
+            <div class="flex items-center gap-6">
+                <div class="flex flex-col">
+                    <div class="flex items-center gap-2">
+                        <h2 id="user-greeting" class="text-sm font-bold text-white">Bom dia, Jeferson</h2>
+                        <span class="text-xs text-text-dim">|</span>
+                        <span id="current-time" class="text-xs font-mono text-primary font-bold">08:59:54</span>
+                    </div>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
+                        <span class="text-[10px] font-mono text-text-dim uppercase tracking-wider">Sistema Online</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-6">
+                <div class="relative user-menu-container">
+                    <div class="flex items-center gap-3 pl-6 border-l border-border-dark cursor-pointer group">
+                        <div class="text-right hidden sm:block">
+                            <p id="user-name-display" class="text-xs font-bold text-white group-hover:text-primary transition-colors">Jeferson</p>
+                            <p id="user-role-display" class="text-[10px] text-text-dim font-mono uppercase">Desenvolvedor</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-surface-elevated border border-border-dark flex items-center justify-center overflow-hidden group-hover:border-primary transition-all">
+                            <img id="user-avatar" src="https://ui-avatars.com/api/?name=Jeferson&amp;background=0F172A&amp;color=3B82F6" alt="Jeferson">
+                        </div>
+                        <span class="material-symbols-rounded text-text-dim group-hover:text-white transition-colors">expand_more</span>
+                    </div>
+                    <div class="user-dropdown-menu">
+                        <div class="px-4 py-3 border-b border-white/5">
+                            <p class="text-[10px] font-bold text-text-dim uppercase tracking-widest">Conta</p>
+                        </div>
+                        <a href="perfil.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-text-dim hover:text-white hover:bg-white/5 transition-all">
+                            <span class="material-symbols-rounded text-lg">person</span>
+                            Meu Perfil
+                        </a>
+                        <a href="configuracoes.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-text-dim hover:text-white hover:bg-white/5 transition-all">
+                            <span class="material-symbols-rounded text-lg">settings</span>
+                            Configurações
+                        </a>
+                        <div class="h-px bg-white/5 my-1"></div>
+                        <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-danger hover:bg-danger/5 transition-all">
+                            <span class="material-symbols-rounded text-lg">logout</span>
+                            Sair da Conta
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8 space-y-6">
+            <section class="grid gap-6 md:grid-cols-4">
+                <div class="stat-card">
+                    <span class="text-xs uppercase tracking-[0.4em] text-text-dim">Total ativos</span>
+                    <strong class="text-3xl" id="total-employees">—</strong>
+                    <p class="text-sm text-text-dim">Funcionários com status ativo.</p>
+                </div>
+                <div class="stat-card">
+                    <span class="text-xs uppercase tracking-[0.4em] text-text-dim">Pais com filhos</span>
+                    <strong class="text-3xl" id="total-parents">—</strong>
+                    <p class="text-sm text-text-dim">Colaboradores identificados como pais.</p>
+                </div>
+                <div class="stat-card">
+                    <span class="text-xs uppercase tracking-[0.4em] text-text-dim">Mães com filhos</span>
+                    <strong class="text-3xl" id="total-mothers">—</strong>
+                    <p class="text-sm text-text-dim">Dentre os pais, quantas são mulheres.</p>
+                </div>
+                <div class="stat-card">
+                    <span class="text-xs uppercase tracking-[0.4em] text-text-dim">Folha mensal</span>
+                    <strong class="text-3xl text-primary" id="total-salary">—</strong>
+                    <p class="text-sm text-text-dim">Soma das remunerações informadas.</p>
+                </div>
+                <div class="stat-card">
+                    <span class="text-xs uppercase tracking-[0.4em] text-text-dim">Maior salário</span>
+                    <strong class="text-3xl text-success" id="highest-salary">—</strong>
+                    <p class="text-xs text-text-dim">Colaborador: <span id="highest-salary-name">—</span></p>
+                </div>
+                <div class="stat-card">
+                    <span class="text-xs uppercase tracking-[0.4em] text-text-dim">Menor salário</span>
+                    <strong class="text-3xl text-warning" id="lowest-salary">—</strong>
+                    <p class="text-xs text-text-dim">Colaborador: <span id="lowest-salary-name">—</span></p>
+                </div>
+                <div class="stat-card">
+                    <span class="text-xs uppercase tracking-[0.4em] text-text-dim">Líderes ativos</span>
+                    <strong class="text-3xl text-accent" id="leaders-count">—</strong>
+                    <p class="text-sm text-text-dim">Responsáveis com setores mapeados.</p>
+                </div>
+                <div class="stat-card">
+                    <span class="text-xs uppercase tracking-[0.4em] text-text-dim">Advertências</span>
+                    <strong class="text-3xl text-danger" id="total-warnings">—</strong>
+                    <p class="text-xs text-text-dim">Top líder: <span id="top-warning-leader">—</span></p>
+                </div>
+            </section>
+
+            <section class="grid gap-6 lg:grid-cols-[1.3fr,0.7fr]">
+                <div class="table-wrapper">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <p class="text-xs uppercase tracking-[0.4em] text-text-dim">Por empresa</p>
+                            <h3 class="text-2xl font-semibold text-white">Distribuição de funcionários</h3>
+                        </div>
+                        <span class="badge-pill bg-gradient-to-br from-white/20 to-white/5 border-white/10 text-white">Dados reais</span>
+                    </div>
+                    <table class="w-full text-sm text-left text-text-dim">
+                        <thead class="text-[10px] uppercase tracking-[0.4em] text-text-dim border-t border-b border-white/10">
+                            <tr>
+                                <th class="py-3">Empresa</th>
+                                <th class="py-3">Funcionários</th>
+                                <th class="py-3">Valor folha</th>
+                            </tr>
+                        </thead>
+                        <tbody id="company-body" class="divide-y divide-white/5">
+                            <tr>
+                                <td colspan="3" class="py-6 text-center text-text-dim">Carregando dados...</td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="text-xs text-text-dim uppercase tracking-[0.4em]">
+                            <tr>
+                                <td class="pt-4">Total geral</td>
+                                <td class="pt-4" id="company-total-employees">—</td>
+                                <td class="pt-4" id="company-total-salary">—</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="glass rounded-3xl border border-white/10 p-6 space-y-4">
+                    <div>
+                        <p class="text-xs uppercase tracking-[0.4em] text-text-dim">Pais e mães</p>
+                        <h3 class="text-2xl font-semibold text-white">Informações complementares</h3>
+                    </div>
+                    <div class="space-y-3 text-sm text-text-dim">
+                        <div class="flex justify-between">
+                            <span>Pais com filhos</span>
+                            <strong class="text-white" id="parent-metric-parents">—</strong>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Mães ativas</span>
+                            <strong class="text-white" id="parent-metric-mothers">—</strong>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Mães entre pais</span>
+                            <strong class="text-white" id="parent-metric-mother-share">—</strong>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Filhos registrados</span>
+                            <strong class="text-white" id="parent-metric-children">—</strong>
+                        </div>
+                    </div>
+                    <div class="grid gap-3">
+                        <div class="flex items-center justify-between bg-white/5 rounded-2xl px-4 py-3">
+                            <span class="text-sm text-white">Pais (masculino)</span>
+                            <span class="text-xs text-text-dim" id="parent-home-office">—</span>
+                        </div>
+                        <div class="flex items-center justify-between bg-white/5 rounded-2xl px-4 py-3">
+                            <span class="text-sm text-white">Mães (feminino)</span>
+                            <span class="text-xs text-text-dim" id="parent-maternal-leave">—</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="grid gap-6 md:grid-cols-2">
+                <div class="glass rounded-3xl border border-white/10 p-6 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs uppercase tracking-[0.4em] text-text-dim">Aniversariantes</p>
+                            <h3 class="text-2xl font-semibold text-white">Este mês</h3>
+                        </div>
+                        <span class="badge-pill" id="birthday-current-count">— registros</span>
+                    </div>
+                    <ul id="birthday-current-list" class="space-y-2 text-sm text-text-main">
+                        <li class="flex justify-between text-text-dim">Dados sendo carregados...</li>
+                    </ul>
+                </div>
+                <div class="glass rounded-3xl border border-white/10 p-6 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs uppercase tracking-[0.4em] text-text-dim">Próximo mês</p>
+                            <h3 class="text-2xl font-semibold text-white">Próximo mês</h3>
+                        </div>
+                        <span class="badge-pill bg-warning/10 text-warning border-warning/30" id="birthday-next-count">— registros</span>
+                    </div>
+                    <ul id="birthday-next-list" class="space-y-2 text-sm text-text-main">
+                        <li class="flex justify-between text-text-dim">Dados sendo carregados...</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="grid gap-6 lg:grid-cols-2">
+                <div class="glass rounded-3xl border border-white/10 p-6 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs uppercase tracking-[0.4em] text-text-dim">Experiencia</p>
+                            <h3 class="text-2xl font-semibold text-white">Primeira fase (0-45 dias)</h3>
+                        </div>
+                        <span class="badge-pill" id="experience-phase1-count">— registros</span>
+                    </div>
+                    <ul id="experience-phase1-list" class="space-y-2 text-sm text-text-main">
+                        <li class="flex justify-between text-text-dim">Dados sendo carregados...</li>
+                    </ul>
+                </div>
+                <div class="glass rounded-3xl border border-white/10 p-6 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs uppercase tracking-[0.4em] text-text-dim">Experiencia</p>
+                            <h3 class="text-2xl font-semibold text-white">Segunda fase (46-90 dias)</h3>
+                        </div>
+                        <span class="badge-pill bg-accent/10 text-accent border-accent/30" id="experience-phase2-count">— registros</span>
+                    </div>
+                    <ul id="experience-phase2-list" class="space-y-2 text-sm text-text-main">
+                        <li class="flex justify-between text-text-dim">Dados sendo carregados...</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="grid gap-6 lg:grid-cols-2">
+                <div class="chart-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <p class="text-xs uppercase tracking-[0.4em] text-text-dim">Gráfico</p>
+                            <h3 class="text-xl font-semibold text-white">Funcionários por empresa</h3>
+                        </div>
+                        <span class="badge-pill">Atual</span>
+                    </div>
+                    <canvas id="chart-company" class="min-h-[220px]"></canvas>
+                </div>
+                <div class="chart-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <p class="text-xs uppercase tracking-[0.4em] text-text-dim">Gráfico</p>
+                            <h3 class="text-xl font-semibold text-white">Pais vs. mães</h3>
+                        </div>
+                        <span class="badge-pill bg-primary/10 text-primary border-primary/30">Dinâmico</span>
+                    </div>
+                    <canvas id="chart-parents" class="min-h-[220px]"></canvas>
+                </div>
+            </section>
+
+            <section class="grid gap-6 lg:grid-cols-2">
+                <div class="chart-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <p class="text-xs uppercase tracking-[0.4em] text-text-dim">Advertências</p>
+                            <h3 class="text-xl font-semibold text-white">Funcionários com mais registros</h3>
+                        </div>
+                        <span class="badge-pill bg-warning/10 text-warning border-warning/30">Atual</span>
+                    </div>
+                    <div class="min-h-[260px]">
+                        <canvas id="chart-warnings" class="min-h-[260px] w-full"></canvas>
+                    </div>
+                    <div class="pt-4">
+                        <p class="text-xs uppercase tracking-[0.4em] text-text-dim">Top 4</p>
+                        <ul id="warning-top-list" class="space-y-2 text-sm text-text-main">
+                            <li class="text-text-dim">Carregando advertências...</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <p class="text-xs uppercase tracking-[0.4em] text-text-dim">Líderes</p>
+                            <h3 class="text-xl font-semibold text-white">Líderes e seus setores</h3>
+                        </div>
+                        <span class="badge-pill bg-accent/10 text-accent border-accent/30">Insights</span>
+                    </div>
+                    <div class="min-h-[260px]">
+                        <canvas id="chart-leaders" class="min-h-[260px] w-full"></canvas>
+                    </div>
+                    <div class="pt-4">
+                        <p class="text-xs uppercase tracking-[0.4em] text-text-dim">Visão rápida</p>
+                        <ul id="leader-overview" class="space-y-2 text-sm text-text-dim">
+                            <li class="text-text-dim">Carregando líderes...</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="glass rounded-3xl border border-white/10 p-6 space-y-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs uppercase tracking-[0.4em] text-text-dim">Datas comemorativas</p>
+                        <h3 class="text-2xl font-semibold text-white">Eventos e feriados</h3>
+                    </div>
+                    <span class="badge-pill text-white">Calendário oficial</span>
+                </div>
+                <div class="grid gap-6 md:grid-cols-2">
+                    <div>
+                        <p class="text-xs uppercase tracking-[0.4em] text-text-dim mb-3">Feriados do mês</p>
+                        <div id="holiday-month-grid" class="grid gap-3"></div>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-[0.4em] text-text-dim mb-3">Datas comemorativas</p>
+                        <div id="holiday-general-grid" class="grid gap-3"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="scripts/admin-common.js"></script>
+     <script src="scripts/aton-widget.js" defer></script>
+    <script type="module">
+    const SCRIPT_API_BASE = typeof API_BASE_URL === "string" && API_BASE_URL ? API_BASE_URL : window.location.origin;
+    const SCRIPT_RAW_BASE = typeof GITHUB_RAW_BASE_URL === "string" && GITHUB_RAW_BASE_URL ? GITHUB_RAW_BASE_URL : "https://raw.githubusercontent.com/PopularAtacarejo/Candidatos/main";
+    const EMPLOYEES_API_URL = `${SCRIPT_API_BASE}/api/funcionarios/`;
+    const EMPLOYEES_FALLBACK_URL = `${SCRIPT_RAW_BASE}/funcionarios-ativos.json`;
+    const EMPLOYEES_LOCAL_URL = "funcionarios-ativos.json";
+    const ADVERTENCIAS_URL = `${SCRIPT_RAW_BASE}/Advertencia/Advertencia.json`;
+    const LEADERS_URL = "data/lideres.json";
+    const HOLIDAYS_URL = `${SCRIPT_RAW_BASE}/feriados.json`;
+
+    const formatter = new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+        minimumFractionDigits: 2
+    });
+
+    const createBarGradient = (ctx, colors = ["rgba(59, 130, 246, 0.95)", "rgba(59, 130, 246, 0.35)"]) => {
+        if (!ctx || !ctx.canvas) {
+            return colors[0] || "#3B82F6";
+        }
+        const gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
+        const stops = colors.length - 1;
+        colors.forEach((color, index) => gradient.addColorStop(index / (stops || 1), color));
+        return gradient;
+    };
+
+    const createDoughnutGradient = (ctx, colors = ["rgba(249, 115, 22, 0.95)", "rgba(249, 115, 22, 0.55)"]) => {
+        if (!ctx || !ctx.canvas) {
+            return colors[0] || "#f97316";
+        }
+        const gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
+        const stops = colors.length - 1;
+        colors.forEach((color, index) => gradient.addColorStop(index / (stops || 1), color));
+        return gradient;
+    };
+
+    const formatCompact = (value) => new Intl.NumberFormat("pt-BR").format(value || 0);
+
+    const doughnutCenterTextPlugin = {
+        id: "doughnutCenterText",
+        afterDraw(chart, args, options) {
+            if (chart.config.type !== "doughnut") return;
+            const dataset = chart.data.datasets?.[0];
+            if (!dataset) return;
+            const data = dataset.data || [];
+            const total = data.reduce((acc, item) => acc + Number(item || 0), 0);
+            const maxValue = Math.max(...data.map((item) => Number(item || 0)), 0);
+            const maxIndex = data.findIndex((item) => Number(item || 0) === maxValue);
+            const label = chart.data.labels?.[maxIndex] || "";
+            const percent = total ? Math.round((maxValue / total) * 100) : 0;
+            const meta = chart.getDatasetMeta(0);
+            const centerX = meta?.data?.[0]?.x ?? (chart.chartArea.left + chart.chartArea.right) / 2;
+            const centerY = meta?.data?.[0]?.y ?? (chart.chartArea.top + chart.chartArea.bottom) / 2;
+
+            chart.ctx.save();
+            chart.ctx.textAlign = "center";
+            chart.ctx.textBaseline = "middle";
+            chart.ctx.fillStyle = options?.titleColor || "#F8FAFC";
+            chart.ctx.font = "700 22px 'Plus Jakarta Sans', sans-serif";
+            chart.ctx.fillText(formatCompact(total), centerX, centerY - 10);
+            chart.ctx.fillStyle = options?.subtitleColor || "rgba(226,232,240,0.7)";
+            chart.ctx.font = "600 11px 'Plus Jakarta Sans', sans-serif";
+            chart.ctx.fillText(total ? `${label} • ${percent}%` : "Sem dados", centerX, centerY + 14);
+            chart.ctx.restore();
+        }
+    };
+
+    Chart.register(doughnutCenterTextPlugin);
+
+    const parseSalary = (value) => {
+        if (value == null) {
+            return 0;
+        }
+        const cleaned = String(value).replace(/\u00A0/g, "").replace(/[^\d,.-]/g, "");
+        const normalized = cleaned.replace(/\./g, "").replace(/,/g, ".");
+        const number = parseFloat(normalized);
+        return Number.isFinite(number) ? number : 0;
+    };
+
+    const parseDate = (raw) => {
+        if (!raw) {
+            return null;
+        }
+        const [year, month, day] = raw.split("-").map(Number);
+        if (!year || !month || !day) {
+            return null;
+        }
+        return new Date(year, month - 1, day);
+    };
+
+    const normalizeBoolean = (value) => {
+        if (typeof value === "boolean") {
+            return value;
+        }
+        if (typeof value === "number") {
+            return value > 0;
+        }
+        if (typeof value === "string") {
+            const normalized = value.trim().toLowerCase();
+            return ["true", "sim", "yes", "1", "pai", "mae"].includes(normalized);
+        }
+        return false;
+    };
+
+    const isParent = (employee) => {
+        if (!employee) {
+            return false;
+        }
+        if (normalizeBoolean(employee.pai_mae ?? employee.paiMae)) {
+            return true;
+        }
+        return Array.isArray(employee.filhos) && employee.filhos.length > 0;
+    };
+
+    const getChildrenCount = (employee) => {
+        if (!employee) {
+            return 0;
+        }
+        if (Array.isArray(employee.filhos)) {
+            return employee.filhos.length;
+        }
+        const fallback = employee.total_filhos ?? employee.qtd_filhos ?? employee.quantidade_filhos;
+        return Number.isFinite(Number(fallback)) ? Number(fallback) : 0;
+    };
+
+    const isFemale = (employee) => {
+        const raw = String(employee?.sexo ?? employee?.genero ?? "").toLowerCase();
+        return raw.startsWith("f");
+    };
+
+    const isMale = (employee) => {
+        const raw = String(employee?.sexo ?? employee?.genero ?? "").toLowerCase();
+        return raw.startsWith("m");
+    };
+
+    const calculateDaysSince = (date, reference) => {
+        if (!date) {
+            return null;
+        }
+        const base = reference ? new Date(reference) : new Date();
+        const start = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        const end = new Date(base.getFullYear(), base.getMonth(), base.getDate());
+        const diffMs = end - start;
+        return Math.floor(diffMs / 86400000);
+    };
+
+    const getSectorLabel = (employee) =>
+        employee?.setor || employee?.area || employee?.departamento || employee?.funcao || "Setor nao informado";
+
+    const calculateAge = (birthDate, reference) => {
+        if (!birthDate || !reference) {
+            return "—";
+        }
+        const yearDiff = reference.getFullYear() - birthDate.getFullYear();
+        const monthDiff = reference.getMonth() - birthDate.getMonth();
+        const dayDiff = reference.getDate() - birthDate.getDate();
+        const age = yearDiff - (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? 1 : 0);
+        return age >= 0 ? age : "—";
+    };
+
+
+
+    const isExperienceEnabled = (employee) =>
+        normalizeBoolean(employee?.em_experiencia ?? employee?.experiencia ?? employee?.emExperiencia);
+
+    const getExperiencePhase = (days) => {
+        if (days <= 45) {
+            return 1;
+        }
+        if (days <= 90) {
+            return 2;
+        }
+        return 3;
+    };
+
+    const getExperienceMilestone = (days) => {
+        if (days < 40) {
+            return `Prova 40 dias em ${40 - days} dias`;
+        }
+        if (days < 45) {
+            return `Decisao 45 dias em ${45 - days} dias`;
+        }
+        if (days < 85) {
+            return `Prova 85 dias em ${85 - days} dias`;
+        }
+        if (days < 90) {
+            return `Decisao 90 dias em ${90 - days} dias`;
+        }
+        return "Experiencia concluida";
+    };
+
+    const safeFetchJson = async (url) => {
+        try {
+            const response = await fetch(url, { cache: "no-store" });
+            if (!response.ok) {
+                throw new Error(`Status ${response.status}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.warn("Falha ao carregar", url, error);
+            return null;
+        }
+    };
+
+    const normalizeEmployeesData = (data) => {
+        if (Array.isArray(data)) {
+            return data;
+        }
+        if (data && Array.isArray(data.funcionarios)) {
+            return data.funcionarios;
+        }
+        return [];
+    };
+
+    const loadEmployees = async () => {
+        const sources = [];
+        if (typeof authFetch === "function") {
+            sources.push(async () => {
+                const response = await authFetch(EMPLOYEES_API_URL);
+                if (!response.ok) {
+                    throw new Error(`API responded with ${response.status}`);
+                }
+                const payload = await response.json();
+                return normalizeEmployeesData(payload);
+            });
+        }
+        sources.push(async () => normalizeEmployeesData(await safeFetchJson(EMPLOYEES_FALLBACK_URL)));
+        sources.push(async () => normalizeEmployeesData(await safeFetchJson(EMPLOYEES_LOCAL_URL)));
+
+        let fallback = [];
+        for (const fetcher of sources) {
+            try {
+                const result = await fetcher();
+                if (Array.isArray(result)) {
+                    if (result.length) {
+                        return result;
+                    }
+                    fallback = result;
+                }
+            } catch (error) {
+                console.warn("Falha ao carregar funcionários ativos:", error);
+            }
+        }
+        return fallback;
+    };
+
+    const calculateAverageDays = (entries = []) => {
+        const values = entries
+            .map((entry) => Number(entry.dias_suspensao || entry.dias || 0))
+            .filter((value) => Number.isFinite(value) && value > 0);
+        if (!values.length) {
+            return "0";
+        }
+        const sum = values.reduce((acc, value) => acc + value, 0);
+        return (sum / values.length).toFixed(1);
+    };
+
+    const getTopLeaderFromWarnings = (entries = []) => {
+        const aggregator = {};
+        entries.forEach((entry) => {
+            const leader = (entry.lider_responsavel || entry.lider || "").trim();
+            if (!leader) {
+                return;
+            }
+            aggregator[leader] = (aggregator[leader] || 0) + 1;
+        });
+        const sorted = Object.entries(aggregator).sort((a, b) => b[1] - a[1]);
+        return sorted.length ? sorted[0][0] : "—";
+    };
+
+    const groupByCompany = (employees = []) =>
+        employees.reduce((acc, employee) => {
+            const company = employee.empresa || "Não informado";
+            const salary = parseSalary(employee.salario);
+            if (!acc[company]) {
+                acc[company] = { count: 0, salary: 0 };
+            }
+            acc[company].count += 1;
+            acc[company].salary += salary;
+            return acc;
+        }, {});
+
+    const holidayTypeLabels = {
+        feriado: "Feriado",
+        ponto_facultativo: "Ponto facultativo"
+    };
+
+    const capitalize = (value) => {
+        if (!value) {
+            return "—";
+        }
+        return value.charAt(0).toUpperCase() + value.slice(1);
+    };
+
+    const parseHolidayDate = (dateStr, year) => {
+        if (!dateStr) {
+            return null;
+        }
+        const [day, month] = dateStr.split("-").map(Number);
+        if (!day || !month) {
+            return null;
+        }
+        return new Date(year, month - 1, day);
+    };
+
+    let chartCompany;
+    let chartParents;
+    let chartWarnings;
+    let chartLeaders;
+    let companyCtx;
+    let parentsCtx;
+    let warningsCtx;
+    let leadersCtx;
+
+    document.addEventListener("DOMContentLoaded", () => {
+        companyCtx = document.getElementById("chart-company").getContext("2d");
+        parentsCtx = document.getElementById("chart-parents").getContext("2d");
+        warningsCtx = document.getElementById("chart-warnings").getContext("2d");
+        leadersCtx = document.getElementById("chart-leaders").getContext("2d");
+
+        chartCompany = new Chart(companyCtx, {
+            type: "bar",
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: "Funcionários",
+                        data: [],
+                        backgroundColor: createBarGradient(companyCtx),
+                        borderRadius: 10,
+                        maxBarThickness: 40
+                    },
+                    {
+                        label: "Folha (R$ mil)",
+                        data: [],
+                        type: "line",
+                        yAxisID: "salaryAxis",
+                        borderColor: "#a855f7",
+                        borderWidth: 2.5,
+                        pointRadius: 4,
+                        tension: 0.3,
+                        fill: false,
+                        backgroundColor: "#a855f7",
+                        pointBackgroundColor: "#a855f7"
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        ticks: { color: "#e2e8f0", font: { size: 12 } },
+                        grid: { display: false }
+                    },
+                    y: {
+                        ticks: { color: "#e2e8f0" },
+                        grid: { color: "rgba(255,255,255,0.08)" }
+                    },
+                    salaryAxis: {
+                        position: "right",
+                        ticks: {
+                            color: "#a855f7",
+                            callback: (value) => `${value}k`
+                        },
+                        grid: { drawOnChartArea: false }
+                    }
+                },
+                plugins: {
+                    legend: { labels: { color: "#e2e8f0" } },
+                    tooltip: {
+                        backgroundColor: "#0f172a",
+                        titleColor: "#fff",
+                        bodyColor: "#e2e8f0",
+                        callbacks: {
+                            label: (context) => {
+                                if (context.datasetIndex === 1) {
+                                    const actual = Number(context.parsed.y || context.parsed) * 1000;
+                                    return `Folha: ${formatter.format(actual)}`;
+                                }
+                                return `Funcionários: ${context.parsed.y ?? context.parsed}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        chartParents = new Chart(parentsCtx, {
+            type: "doughnut",
+            data: {
+                labels: ["Pais", "Mães"],
+                datasets: [
+                    {
+                        data: [0, 0],
+                        backgroundColor: [
+                            createDoughnutGradient(parentsCtx, ["rgba(249, 115, 22, 0.95)", "rgba(249, 115, 22, 0.55)"]),
+                            createDoughnutGradient(parentsCtx, ["rgba(139, 92, 246, 0.95)", "rgba(139, 92, 246, 0.55)"])
+                        ],
+                        borderColor: ["rgba(249, 115, 22, 0.85)", "rgba(139, 92, 246, 0.85)"],
+                        borderWidth: 2,
+                        hoverOffset: 10,
+                        borderRadius: 12,
+                        spacing: 4,
+                        cutout: "68%"
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                layout: { padding: 10 },
+                plugins: {
+                    legend: {
+                        position: "bottom",
+                        labels: {
+                            color: "#e2e8f0",
+                            usePointStyle: true,
+                            pointStyle: "circle",
+                            padding: 16,
+                            generateLabels: (chart) => {
+                                const dataset = chart.data.datasets[0];
+                                const data = dataset.data || [];
+                                const total = data.reduce((acc, item) => acc + Number(item || 0), 0);
+                                return chart.data.labels.map((label, index) => {
+                                    const value = Number(data[index] || 0);
+                                    const percent = total ? Math.round((value / total) * 100) : 0;
+                                    return {
+                                        text: `${label} • ${value} (${percent}%)`,
+                                        fillStyle: Array.isArray(dataset.backgroundColor) ? dataset.backgroundColor[index] : dataset.backgroundColor,
+                                        strokeStyle: Array.isArray(dataset.borderColor) ? dataset.borderColor[index] : dataset.borderColor,
+                                        lineWidth: dataset.borderWidth,
+                                        hidden: chart.getDatasetMeta(0).data[index]?.hidden || false,
+                                        index
+                                    };
+                                });
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: "#0f172a",
+                        titleColor: "#fff",
+                        bodyColor: "#e2e8f0",
+                        callbacks: {
+                            label: (context) => {
+                                const value = Number(context.parsed || 0);
+                                const data = context.dataset.data || [];
+                                const total = data.reduce((acc, item) => acc + Number(item || 0), 0);
+                                const percent = total ? Math.round((value / total) * 100) : 0;
+                                return `${context.label}: ${value} colaboradores (${percent}%)`;
+                            }
+                        }
+                    },
+                    doughnutCenterText: {
+                        titleColor: "#F8FAFC",
+                        subtitleColor: "rgba(226,232,240,0.7)"
+                    }
+                }
+            }
+        });
+
+        chartWarnings = new Chart(warningsCtx, {
+            type: "bar",
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: "Advertências",
+                        data: [],
+                        backgroundColor: createBarGradient(warningsCtx, ["rgba(249, 115, 22, 0.95)", "rgba(249, 115, 22, 0.35)"]),
+                        borderRadius: 12,
+                        barPercentage: 0.7
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: "y",
+                scales: {
+                    x: {
+                        ticks: { color: "#e2e8f0" },
+                        grid: { color: "rgba(255,255,255,0.08)" },
+                        beginAtZero: true
+                    },
+                    y: {
+                        ticks: { color: "#e2e8f0" },
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        backgroundColor: "#0f172a",
+                        titleColor: "#fff",
+                        bodyColor: "#e2e8f0",
+                        callbacks: {
+                            label: (context) => `${context.parsed.x ?? context.parsed} advertência(s)`
+                        }
+                    },
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        chartLeaders = new Chart(leadersCtx, {
+            type: "bar",
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: "Setores",
+                        data: [],
+                        backgroundColor: createBarGradient(leadersCtx, ["rgba(139, 92, 246, 0.9)", "rgba(139, 92, 246, 0.35)"]),
+                        borderRadius: 10,
+                        maxBarThickness: 28
+                    },
+                    {
+                        label: "Equipe",
+                        data: [],
+                        backgroundColor: createBarGradient(leadersCtx, ["rgba(59, 130, 246, 0.9)", "rgba(59, 130, 246, 0.35)"]),
+                        borderRadius: 10,
+                        maxBarThickness: 28
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        ticks: { color: "#e2e8f0" },
+                        grid: { color: "rgba(255,255,255,0.08)" }
+                    },
+                    y: {
+                        ticks: { color: "#e2e8f0" },
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        backgroundColor: "#0f172a",
+                        titleColor: "#fff",
+                        bodyColor: "#e2e8f0",
+                        callbacks: {
+                            label: (context) => `${context.dataset.label}: ${context.parsed.y ?? context.parsed}`
+                        }
+                    }
+                }
+            }
+        });
+
+        loadDashboard();
+    });
+
+    async function loadDashboard() {
+        const employeesPromise = loadEmployees();
+        const [leadersData, warningsData, holidaysData] = await Promise.all([
+            safeFetchJson(LEADERS_URL),
+            safeFetchJson(ADVERTENCIAS_URL),
+            safeFetchJson(HOLIDAYS_URL)
+        ]);
+
+        const employees = await employeesPromise;
+        const leaders = Array.isArray(leadersData) ? leadersData : [];
+        const warnings = Array.isArray(warningsData) ? warningsData : [];
+        const holidays = Array.isArray(holidaysData?.holidays) ? holidaysData.holidays : [];
+
+        updateDashboard(employees, leaders, warnings, holidays);
+    }
+
+    function updateDashboard(employees, leaders, warnings, holidays) {
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const currentMonth = today.getMonth();
+        const nextMonth = (currentMonth + 1) % 12;
+        const monthLabel = new Intl.DateTimeFormat("pt-BR", { month: "long" }).format(today);
+
+        const parents = employees.filter((employee) => isParent(employee));
+        const mothers = parents.filter((employee) => isFemale(employee));
+        const fathers = parents.filter((employee) => isMale(employee));
+        const totalChildren = parents.reduce((acc, employee) => acc + getChildrenCount(employee), 0);
+
+        const salaryEntries = employees
+            .map((employee) => ({ ...employee, salaryValue: parseSalary(employee.salario) }))
+            .filter((employee) => Number.isFinite(employee.salaryValue));
+
+        const totalSalary = salaryEntries.reduce((acc, employee) => acc + employee.salaryValue, 0);
+        const highestSalary = salaryEntries.reduce((acc, employee) => (!acc || employee.salaryValue > acc.salaryValue ? employee : acc), null);
+        const lowestSalary = salaryEntries.reduce((acc, employee) => (!acc || employee.salaryValue < acc.salaryValue ? employee : acc), null);
+
+        const companyGroups = groupByCompany(employees);
+        const companyRows = Object.entries(companyGroups)
+            .map(([company, stats]) => ({ company, ...stats }))
+            .sort((a, b) => b.count - a.count);
+
+        const companyBody = document.getElementById("company-body");
+        if (companyBody) {
+            companyBody.innerHTML = companyRows.length
+                ? companyRows
+                      .map(
+                          (row) => `
+                    <tr>
+                        <td class="py-3 text-white font-semibold">${row.company}</td>
+                        <td class="py-3">${row.count}</td>
+                        <td class="py-3 text-primary">${formatter.format(row.salary)}</td>
+                    </tr>
+                `
+                      )
+                      .join("")
+                : `<tr><td colspan="3" class="py-6 text-center text-text-dim">Nenhum registro disponível</td></tr>`;
+        }
+
+        document.getElementById("total-employees").textContent = employees.length;
+        document.getElementById("total-parents").textContent = parents.length;
+        document.getElementById("total-mothers").textContent = mothers.length;
+        document.getElementById("total-salary").textContent = formatter.format(totalSalary);
+        document.getElementById("parent-metric-parents").textContent = parents.length;
+        document.getElementById("parent-metric-mothers").textContent = mothers.length;
+        document.getElementById("parent-metric-mother-share").textContent = parents.length ? `${((mothers.length / parents.length) * 100).toFixed(0)}%` : "0%";
+        document.getElementById("parent-metric-children").textContent = totalChildren;
+        document.getElementById("parent-home-office").textContent = `${fathers.length} pais`;
+        document.getElementById("parent-maternal-leave").textContent = `${mothers.length} mães`;
+
+        document.getElementById("company-total-employees").textContent = employees.length;
+        document.getElementById("company-total-salary").textContent = formatter.format(totalSalary);
+
+        document.getElementById("highest-salary").textContent = highestSalary ? formatter.format(highestSalary.salaryValue) : "—";
+        document.getElementById("highest-salary-name").textContent = highestSalary ? highestSalary.nome_completo : "—";
+        document.getElementById("lowest-salary").textContent = lowestSalary ? formatter.format(lowestSalary.salaryValue) : "—";
+        document.getElementById("lowest-salary-name").textContent = lowestSalary ? lowestSalary.nome_completo : "—";
+
+        const warningInsights = buildWarningInsights(warnings);
+        document.getElementById("total-warnings").textContent = warningInsights.total;
+        document.getElementById("top-warning-leader").textContent = warningInsights.topLeader || "—";
+        renderWarningTopList(warningInsights.topEmployees);
+
+        const leaderInsights = buildLeaderInsights(leaders, employees);
+        document.getElementById("leaders-count").textContent = leaderInsights.length;
+        renderLeaderOverview(leaderInsights);
+
+        const birthdays = employees
+            .map((employee) => {
+                const birthDate = parseDate(employee.data_nascimento);
+                return birthDate ? { ...employee, birthDate } : null;
+            })
+            .filter(Boolean);
+
+        const birthdaysThisMonth = birthdays
+            .filter((employee) => employee.birthDate.getMonth() === currentMonth)
+            .sort((a, b) => a.birthDate.getDate() - b.birthDate.getDate());
+
+        const birthdaysNextMonth = birthdays
+            .filter((employee) => employee.birthDate.getMonth() === nextMonth)
+            .sort((a, b) => a.birthDate.getDate() - b.birthDate.getDate());
+
+        renderBirthdays(birthdaysThisMonth, "birthday-current-list", "birthday-current-count", today);
+        renderBirthdays(birthdaysNextMonth, "birthday-next-list", "birthday-next-count", today);
+
+        const experienceEmployees = employees
+            .filter((employee) => isExperienceEnabled(employee))
+            .map((employee) => {
+                const admissionDate = parseDate(employee.data_admissao);
+                if (!admissionDate) {
+                    return null;
+                }
+                const days = calculateDaysSince(admissionDate, today);
+                if (days == null || days < 0) {
+                    return null;
+                }
+                const phase = getExperiencePhase(days);
+                if (phase > 2) {
+                    return null;
+                }
+                return { ...employee, admissionDate, experienceDays: days, experiencePhase: phase };
+            })
+            .filter(Boolean)
+            .sort((a, b) => a.experienceDays - b.experienceDays);
+
+        const experiencePhase1 = experienceEmployees.filter((employee) => employee.experiencePhase === 1);
+        const experiencePhase2 = experienceEmployees.filter((employee) => employee.experiencePhase === 2);
+
+        renderExperienceList(experiencePhase1, "experience-phase1-list", "experience-phase1-count", today);
+        renderExperienceList(experiencePhase2, "experience-phase2-list", "experience-phase2-count", today);
+
+
+        const monthKeys = renderHolidayMonth(holidays, currentMonth, now.getFullYear(), monthLabel);
+        renderHolidayGeneral(holidays, monthKeys, now.getFullYear());
+
+        chartCompany.data.labels = companyRows.map((row) => row.company);
+        chartCompany.data.datasets[0].data = companyRows.map((row) => row.count);
+        chartCompany.data.datasets[1].data = companyRows.map((row) => Number((row.salary / 1000).toFixed(2)));
+        chartCompany.data.datasets[0].backgroundColor = createBarGradient(companyCtx);
+        chartCompany.update();
+
+        chartParents.data.datasets[0].data = [parents.length, mothers.length];
+        chartParents.update();
+
+        chartWarnings.data.labels = warningInsights.topEmployees.map((item) => item.name);
+        chartWarnings.data.datasets[0].data = warningInsights.topEmployees.map((item) => item.count);
+        chartWarnings.update();
+
+        chartLeaders.data.labels = leaderInsights.map((item) => item.name);
+        chartLeaders.data.datasets[0].data = leaderInsights.map((item) => item.sectors);
+        chartLeaders.data.datasets[1].data = leaderInsights.map((item) => item.employeeCount);
+        chartLeaders.update();
+
+    }
+
+    function buildWarningInsights(entries = []) {
+        const aggregator = {};
+        entries.forEach((entry) => {
+            const name = entry.nome_completo || entry.lider_responsavel || "—";
+            aggregator[name] = (aggregator[name] || 0) + 1;
+        });
+        const sorted = Object.entries(aggregator)
+            .map(([name, count]) => ({ name, count }))
+            .sort((a, b) => b.count - a.count);
+        return {
+            total: entries.length,
+            suspended: entries.filter((entry) => !!entry.suspensao || Number(entry.dias_suspensao || entry.dias || 0) > 0).length,
+            averageDays: calculateAverageDays(entries),
+            topLeader: getTopLeaderFromWarnings(entries),
+            topEmployees: sorted.slice(0, 5)
+        };
+    }
+
+    function renderWarningTopList(list = []) {
+        const container = document.getElementById("warning-top-list");
+        if (!container) {
+            return;
+        }
+        if (!list.length) {
+            container.innerHTML = `<li class="text-text-dim">Nenhuma advertência registrada.</li>`;
+            return;
+        }
+        container.innerHTML = list
+            .map(
+                (entry, index) => `
+                    <li class="flex items-center justify-between">
+                        <span>${index + 1}. ${entry.name}</span>
+                        <span class="text-xs text-text-dim">${entry.count} advertência(s)</span>
+                    </li>
+                `
+            )
+            .join("");
+    }
+
+    function buildLeaderInsights(leaders = [], employees = []) {
+        const employeeCountByLeader = employees.reduce((acc, employee) => {
+            const leader = (employee.lider_responsavel || "").trim();
+            if (!leader) {
+                return acc;
+            }
+            acc[leader] = (acc[leader] || 0) + 1;
+            return acc;
+        }, {});
+        const insights = leaders.map((leader) => {
+            const name = leader.nome || "—";
+            return {
+                name,
+                sectors: Array.isArray(leader.setores_responsaveis) ? leader.setores_responsaveis.length : 0,
+                employeeCount: employeeCountByLeader[name] || 0
+            };
+        });
+        const uniqueLeaders = new Map();
+        insights.forEach((item) => {
+            uniqueLeaders.set(item.name, item);
+        });
+        Object.keys(employeeCountByLeader).forEach((leaderName) => {
+            if (!uniqueLeaders.has(leaderName)) {
+                uniqueLeaders.set(leaderName, {
+                    name: leaderName,
+                    sectors: 0,
+                    employeeCount: employeeCountByLeader[leaderName]
+                });
+            }
+        });
+        return Array.from(uniqueLeaders.values()).sort((a, b) => b.employeeCount - a.employeeCount);
+    }
+
+    function renderLeaderOverview(list = []) {
+        const container = document.getElementById("leader-overview");
+        if (!container) {
+            return;
+        }
+        if (!list.length) {
+            container.innerHTML = `<li class="text-text-dim">Nenhum líder cadastrado.</li>`;
+            return;
+        }
+        container.innerHTML = list
+            .slice(0, 4)
+            .map(
+                (leader) => `
+                    <li class="flex items-center justify-between">
+                        <span>${leader.name}</span>
+                        <span class="text-xs text-text-dim">${leader.sectors} setores • ${leader.employeeCount} colaboradores</span>
+                    </li>
+                `
+            )
+            .join("");
+    }
+
+    function renderBirthdays(list, containerId, counterId, referenceDate) {
+        const container = document.getElementById(containerId);
+        if (!container) {
+            return;
+        }
+        container.innerHTML = "";
+        if (!list.length) {
+            container.innerHTML = `<li class="flex justify-between text-text-dim"><span>Nenhum registro disponível</span></li>`;
+        }
+        list.forEach((employee) => {
+            const age = calculateAge(employee.birthDate, referenceDate);
+            const dayLabel = formatDayMonth(employee.birthDate);
+            const sectorLabel = getSectorLabel(employee);
+            const element = document.createElement("li");
+            element.classList.add("flex", "items-center", "justify-between", "gap-4");
+            element.innerHTML = `
+                <div>
+                    <p class="text-white font-semibold">${employee.nome_completo}</p>
+                    <p class="text-xs text-text-dim">${sectorLabel}</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs text-text-dim">${dayLabel}</p>
+                    <p class="text-xs text-primary">${age} anos</p>
+                </div>
+            `;
+            container.appendChild(element);
+        });
+        const counter = document.getElementById(counterId);
+        if (counter) {
+            counter.textContent = `${list.length} registros`;
+        }
+    }
+
+
+
+    function renderExperienceList(list, containerId, counterId, referenceDate) {
+        const container = document.getElementById(containerId);
+        if (!container) {
+            return;
+        }
+        container.innerHTML = "";
+        if (!list.length) {
+            container.innerHTML = `<li class="flex justify-between text-text-dim"><span>Nenhum registro disponivel</span></li>`;
+        }
+        list.forEach((employee) => {
+            const days = employee.experienceDays;
+            const admissionLabel = formatDayMonth(employee.admissionDate);
+            const sectorLabel = getSectorLabel(employee);
+            const milestone = getExperienceMilestone(days);
+            const element = document.createElement("li");
+            element.classList.add("flex", "items-center", "justify-between", "gap-4");
+            element.innerHTML = `
+                <div>
+                    <p class="text-white font-semibold">${employee.nome_completo}</p>
+                    <p class="text-xs text-text-dim">${sectorLabel} ? Admissao ${admissionLabel}</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs text-primary">${days} dias</p>
+                    <p class="text-xs text-text-dim">${milestone}</p>
+                </div>
+            `;
+            container.appendChild(element);
+        });
+        const counter = document.getElementById(counterId);
+        if (counter) {
+            counter.textContent = `${list.length} registros`;
+        }
+    }
+
+    function formatDayMonth(date) {
+        return date ? date.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }) : "—";
+    }
+
+    function renderHolidayMonth(holidayList = [], month, year, monthLabel = "") {
+        const container = document.getElementById("holiday-month-grid");
+        if (!container) {
+            return new Set();
+        }
+        const monthEvents = holidayList
+            .map((holiday) => {
+                const parsedDate = parseHolidayDate(holiday.date, year);
+                const key = `${holiday.name}::${holiday.date ?? "movel"}`;
+                return { ...holiday, key, parsedDate };
+            })
+            .filter((item) => item.parsedDate && item.parsedDate.getMonth() === month)
+            .sort((a, b) => a.parsedDate - b.parsedDate);
+        container.innerHTML = monthEvents.length
+            ? monthEvents.map((event) => createHolidayCard({ ...event, dateLabel: formatDayMonth(event.parsedDate) })).join("")
+            : `<p class="text-sm text-text-dim">Nenhum feriado previsto para ${capitalize(monthLabel)}.</p>`;
+        return new Set(monthEvents.map((event) => event.key));
+    }
+
+    function renderHolidayGeneral(holidayList = [], excludedKeys = new Set(), year) {
+        const container = document.getElementById("holiday-general-grid");
+        if (!container) {
+            return;
+        }
+        const generalEvents = [];
+        for (const holiday of holidayList) {
+            const key = `${holiday.name}::${holiday.date ?? "movel"}`;
+            if (excludedKeys.has(key)) {
+                continue;
+            }
+            const parsedDate = parseHolidayDate(holiday.date, year);
+            generalEvents.push({ ...holiday, key, parsedDate });
+            if (generalEvents.length >= 6) {
+                break;
+            }
+        }
+        container.innerHTML = generalEvents.length
+            ? generalEvents
+                  .map((event) =>
+                      createHolidayCard({
+                          ...event,
+                          dateLabel: event.parsedDate ? formatDayMonth(event.parsedDate) : "Data móvel"
+                      })
+                  )
+                  .join("")
+            : `<p class="text-sm text-text-dim">Nenhuma outra data registrada.</p>`;
+    }
+
+    function createHolidayCard(holiday) {
+        const typeLabel = holidayTypeLabels[holiday.type] || (holiday.type ? holiday.type.replace(/_/g, " ") : "Evento");
+        const scopeLabel = holiday.scope ? capitalize(holiday.scope) : "Geral";
+        const location = holiday.location ? `${capitalize(holiday.location)} • ` : "";
+        const note = holiday.observations || "—";
+        const dateLabel = holiday.dateLabel || "Data móvel";
+        return `
+            <article class="event-card">
+                <div class="flex items-center justify-between">
+                    <span class="event-scope">${typeLabel} • ${scopeLabel}</span>
+                    <small class="text-text-dim">${location || scopeLabel}</small>
+                </div>
+                <strong>${holiday.name || "Evento"}</strong>
+                <p class="text-sm text-white/80">${dateLabel}</p>
+                <p class="text-xs text-text-dim">${note}</p>
+            </article>
+        `;
+    }
+</script>
+
+    <script src="scripts/aton-widget.js" defer></script>
+    <script src="scripts/sidebar.js"></script>
+</body>
+</html>

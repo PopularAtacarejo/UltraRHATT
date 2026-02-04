@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações - Painel Administrativo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3B82F6",
+                        "primary-hover": "#2563EB",
+                        "accent": "#8B5CF6",
+                        "bg-dark": "#030712",
+                        "surface-dark": "#0F172A",
+                        "surface-elevated": "#1E293B",
+                        "border-dark": "#334155",
+                        "text-main": "#F1F5F9",
+                        "text-dim": "#94A3B8",
+                        "success": "#10B981",
+                        "warning": "#F59E0B",
+                        "danger": "#EF4444"
+                    },
+                    fontFamily: {
+                        "sans": ["Plus Jakarta Sans", "Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"]
+                    },
+                    boxShadow: {
+                        'glow-primary': '0 0 25px rgba(59, 130, 246, 0.25)',
+                        'glow-accent': '0 0 25px rgba(139, 92, 246, 0.25)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer base {
+            body {
+                @apply bg-bg-dark text-text-main font-sans antialiased selection:bg-primary/30;
+            }
+        }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { @apply bg-transparent; }
+        ::-webkit-scrollbar-thumb { @apply bg-border-dark rounded-full hover:bg-primary/50 transition-colors; }
+
+        .glass {
+            @apply backdrop-blur-md bg-surface-dark/80 border border-white/5;
+        }
+        .glass-elevated {
+            @apply backdrop-blur-xl bg-surface-elevated/90 border border-white/10;
+        }
+        .sidebar-item {
+            @apply flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 text-text-dim hover:text-white hover:bg-white/5;
+        }
+        .sidebar-item.active {
+            @apply bg-gradient-to-r from-primary/10 to-accent/10 text-primary border border-primary/20 shadow-glow-primary;
+        }
+        .input-pill {
+            @apply w-full bg-surface-dark border border-white/10 rounded-2xl py-3 px-4 text-sm text-white focus:ring-primary/50 focus:border-primary/50 transition-all;
+        }
+        .config-card {
+            @apply glass rounded-3xl border border-white/10 p-8 space-y-6;
+        }
+        .config-section {
+            @apply bg-white/5 border border-white/10 rounded-2xl p-5 space-y-3;
+        }
+        .label-caption {
+            @apply text-[10px] font-mono uppercase tracking-[0.4em] text-text-dim;
+        }
+        .notice-pill {
+            @apply inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/30 text-[10px] text-primary uppercase tracking-[0.3em];
+        }
+        .divider {
+            @apply h-px bg-white/5 my-4;
+        }
+        .tool-tab {
+            @apply px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-text-dim hover:text-white;
+        }
+        .tool-tab.active {
+            @apply bg-primary/10 text-primary;
+        }
+        .filters-grid {
+            @apply grid gap-4 md:grid-cols-2 lg:grid-cols-4;
+        }
+        .filter-input {
+            @apply bg-white/5 border-white/5 rounded-xl py-2.5 px-4 text-xs text-white placeholder:text-text-dim focus:ring-primary/50 focus:border-primary/50 transition-all w-full;
+        }
+        .filter-card {
+            @apply bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3 min-h-[120px];
+        }
+        .filter-icon-input {
+            @apply flex items-center gap-2 border border-white/10 rounded-xl px-3 py-2;
+        }
+        .filter-icon-input input {
+            @apply bg-transparent border-0 text-xs text-white;
+            width: 100%;
+        }
+        .filter-chip-row {
+            @apply flex flex-wrap items-center gap-2 border border-white/5 rounded-2xl p-3 mt-4 bg-white/5;
+        }
+        .filter-chip {
+            @apply flex items-center gap-1 bg-bg-dark/80 border border-white/15 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.4em] text-primary;
+        }
+        .filter-chip small {
+            @apply text-[8px] font-mono text-text-dim lowercase;
+        }
+        .info-card {
+            @apply bg-white/5 border border-white/5 rounded-2xl p-5 transition-all hover:border-primary/30;
+        }
+        .info-label {
+            @apply text-[10px] font-bold text-text-dim uppercase tracking-widest mb-1;
+        }
+        .info-value {
+            @apply text-sm font-semibold text-white;
+        }
+        .user-menu-container {
+            @apply relative;
+        }
+        .user-dropdown-menu {
+            @apply absolute right-0 mt-2 w-48 glass-elevated rounded-2xl py-2 shadow-2xl opacity-0 invisible translate-y-2 transition-all duration-200 z-[100];
+        }
+        .user-menu-container:hover .user-dropdown-menu {
+            @apply opacity-100 visible translate-y-0;
+        }
+        .page-link-row {
+            @apply flex flex-wrap gap-2 items-center;
+        }
+        .page-link-input {
+            @apply bg-white/5 border border-white/10 rounded-2xl py-2 px-3 text-[10px] text-white placeholder:text-text-dim focus:border-primary/40 focus:outline-none;
+            min-width: 0;
+        }
+        .page-link-row button {
+            @apply text-[10px] uppercase tracking-[0.4em] px-3 py-1 rounded-full border border-white/10 text-text-dim transition-colors;
+        }
+        .page-link-row button:hover {
+            @apply border-danger text-danger;
+        }
+    </style>
+
+    <style>
+        .brand-bolt-wrap {
+            position: relative;
+        }
+        .brand-bolt-wrap::after {
+            content: "";
+            position: absolute;
+            inset: -6px;
+            border-radius: 18px;
+            background: radial-gradient(circle at 40% 30%, rgba(250, 204, 21, 0.85), rgba(250, 204, 21, 0.25) 45%, rgba(250, 204, 21, 0) 70%);
+            filter: blur(10px);
+            opacity: 0.0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .brand-bolt-wrap:hover::after {
+            opacity: 1;
+        }
+        .brand-bolt {
+            color: #facc15;
+            filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.9)) drop-shadow(0 0 22px rgba(250, 204, 21, 0.7));
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+        .brand-bolt-wrap:hover .brand-bolt {
+            transform: scale(1.18) rotate(-2deg);
+            filter: drop-shadow(0 0 16px rgba(250, 204, 21, 1)) drop-shadow(0 0 34px rgba(250, 204, 21, 0.85));
+        }
+    </style>
+
+
+    <style>
+        .brand-bolt-wrap::after { display: none; }
+        .brand-initials {
+            font-weight: 800;
+            font-size: 0.9rem;
+            letter-spacing: 0.12em;
+            color: #e2e8f0;
+            text-transform: uppercase;
+        }
+    </style>
+
+</head>
+<body class="flex h-screen overflow-hidden">
+    <aside class="w-72 glass border-r border-border-dark flex flex-col p-6 z-50" data-sidebar-active="configuracoes">
+        <div class="flex items-center gap-4 mb-10 px-2">
+            <div>
+                <h1 class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white to-text-dim bg-clip-text text-transparent">UltraRH</h1>
+                <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">Admin Panel</p>
+            </div>
+        </div>
+
+               <nav id="sidebar-links" class="flex-1 space-y-2 overflow-y-auto pr-2">
+        </nav>
+
+
+        <div class="mt-auto pt-6 border-t border-border-dark space-y-2">
+            <button onclick="cleanupCandidates()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-text-dim hover:text-danger hover:bg-danger/5 transition-all text-sm font-medium">
+                <span class="material-symbols-rounded">delete_sweep</span>
+                Limpar Expirados
+            </button>
+            <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-text-dim hover:text-white hover:bg-white/5 transition-all text-sm font-medium">
+                <span class="material-symbols-rounded">logout</span>
+                Sair do Sistema
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col min-w-0 bg-bg-dark relative overflow-hidden">
+        <div class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>
+        <div class="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px] pointer-events-none"></div>
+        <header class="h-20 glass border-b border-border-dark flex items-center justify-between px-8 z-40">
+            <div class="flex items-center gap-6">
+                <div class="flex flex-col">
+                    <div class="flex items-center gap-2">
+                        <h2 id="user-greeting" class="text-sm font-bold text-white">Bom dia, Jeferson</h2>
+                        <span class="text-xs text-text-dim">|</span>
+                        <span id="current-time" class="text-xs font-mono text-primary font-bold">10:02:54</span>
+                    </div>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
+                        <span class="text-[10px] font-mono text-text-dim uppercase tracking-wider">Sistema Online</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-6">
+                <div class="relative user-menu-container">
+                    <div class="flex items-center gap-3 pl-6 border-l border-border-dark cursor-pointer group">
+                        <div class="text-right hidden sm:block">
+                            <p id="user-name-display" class="text-xs font-bold text-white group-hover:text-primary transition-colors">Jeferson</p>
+                            <p id="user-role-display" class="text-[10px] text-text-dim font-mono uppercase">Desenvolvedor</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-surface-elevated border border-border-dark flex items-center justify-center overflow-hidden group-hover:border-primary transition-all">
+                            <img id="user-avatar" src="https://ui-avatars.com/api/?name=Jeferson&background=0F172A&color=3B82F6" alt="Jeferson">
+                        </div>
+                        <span class="material-symbols-rounded text-text-dim group-hover:text-white transition-colors">expand_more</span>
+                    </div>
+                    <div class="user-dropdown-menu">
+                        <div class="px-4 py-3 border-b border-white/5">
+                            <p class="text-[10px] font-bold text-text-dim uppercase tracking-widest">Conta</p>
+                        </div>
+                        <a href="perfil.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-text-dim hover:text-white hover:bg-white/5 transition-all">
+                            <span class="material-symbols-rounded text-lg">person</span>
+                            Meu Perfil
+                        </a>
+                        <a href="configuracoes.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-text-dim hover:text-white hover:bg-white/5 transition-all">
+                            <span class="material-symbols-rounded text-lg">settings</span>
+                            Configurações
+                        </a>
+                        <div class="h-px bg-white/5 my-1"></div>
+                        <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-danger hover:bg-danger/5 transition-all">
+                            <span class="material-symbols-rounded text-lg">logout</span>
+                            Sair da Conta
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8 space-y-8 relative z-10">
+            <section class="config-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-[0.4em] text-text-dim">Ambiente de Desenvolvimento</p>
+                        <h3 class="text-white text-2xl font-bold">Configurações sensíveis</h3>
+                    </div>
+                    <span class="notice-pill">Somente Desenvolvedor</span>
+                </div>
+                <div class="config-section">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="label-caption">Localização dos dados</p>
+                            <h4 class="text-white text-xl font-semibold">Otimize as fontes do painel</h4>
+                        </div>
+                        <span class="text-[10px] text-text-dim">Os arquivos são criados automaticamente caso não existam.</span>
+                    </div>
+                    <div class="grid gap-4 mt-4 md:grid-cols-3">
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">URL candidatos.json</label>
+                            <input type="text" id="config-candidatos-url" class="input-pill" placeholder="https://raw.githubusercontent.com/.../candidatos.json">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">URL vagas.json</label>
+                            <input type="text" id="config-vagas-url" class="input-pill" placeholder="https://raw.githubusercontent.com/.../vagas.json">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">URL lideres.json</label>
+                            <input type="text" id="config-lideres-url" class="input-pill" placeholder="https://raw.githubusercontent.com/.../lideres.json">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">URL setores.json</label>
+                            <input type="text" id="config-setores-url" class="input-pill" placeholder="https://raw.githubusercontent.com/.../setores.json">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">URL funcoes.json</label>
+                            <input type="text" id="config-funcoes-url" class="input-pill" placeholder="https://raw.githubusercontent.com/.../funcoes.json">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">URL funcionarios-ativos.json</label>
+                            <input type="text" id="config-funcionarios-ativos-url" class="input-pill" placeholder="https://raw.githubusercontent.com/.../funcionarios-ativos.json">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">URL feriados.json</label>
+                            <input type="text" id="config-feriados-url" class="input-pill" placeholder="https://raw.githubusercontent.com/.../feriados.json">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">URL empresas.json</label>
+                            <input type="text" id="config-empresas-url" class="input-pill" placeholder="https://raw.githubusercontent.com/.../empresas.json">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">URL configuracoes.json</label>
+                            <input type="text" id="config-configuracoes-url" class="input-pill" placeholder="https://raw.githubusercontent.com/.../configuracoes.json">
+                        </div>
+                    </div>
+                    <div class="grid gap-4 mt-4 md:grid-cols-2">
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">Pasta de currículos</label>
+                            <input type="text" id="config-curriculos-path" class="input-pill" placeholder="/curriculos">
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-text-dim mt-3">Os arquivos são carregados por estes links e podem ser criados automaticamente pelo sistema quando você salva um novo caminho válido.</p>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="config-section">
+                    <p class="label-caption">Autenticação GitHub</p>
+                    <div class="grid gap-4 md:grid-cols-2">
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">Token de acesso</label>
+                            <input type="password" id="config-github-token" class="input-pill" placeholder="ghp_xxxxx">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">Dono do repositório</label>
+                            <input type="text" id="config-github-owner" class="input-pill" placeholder="PopularAtacarejo">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">Branch alvo</label>
+                            <input type="text" id="config-github-branch" class="input-pill" placeholder="main">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">Nome do repositório</label>
+                            <input type="text" id="config-github-repo" class="input-pill" placeholder="Candidatos">
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-text-dim mt-2">O token deve possuir permissões de escrita no repositório. Ele é salvo localmente para segurança.</p>
+                    <div class="mt-4 flex flex-wrap items-center gap-3">
+                        <button id="config-github-init-btn" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 text-white text-[10px] uppercase tracking-[0.3em] font-bold transition-all hover:border-primary/40">
+                            Criar repositório e inicializar
+                        </button>
+                        <span class="text-[10px] text-text-dim">Use quando desejar trocar o local de salvamento online.</span>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="config-section">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="label-caption">Variáveis do .env</p>
+                            <h4 class="text-white text-xl font-semibold">Chaves do aplicativo</h4>
+                        </div>
+                        <span class="text-[10px] text-text-dim">Salvas localmente</span>
+                    </div>
+                    <div class="grid gap-4 mt-4 md:grid-cols-2 lg:grid-cols-3">
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">OPENROUTER_API_KEY</label>
+                            <input type="password" id="config-openrouter-key" class="input-pill" placeholder="sk-...">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">FUNCIONARIOS_ENCRYPTION_KEY</label>
+                            <input type="password" id="config-encryption-key" class="input-pill" placeholder="base64/hex/16-32 bytes">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">ATON_SITE_URL</label>
+                            <input type="text" id="config-aton-site-url" class="input-pill" placeholder="https://...">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">ATON_SITE_TITLE</label>
+                            <input type="text" id="config-aton-site-title" class="input-pill" placeholder="Popular RH">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">DATAJUD_TIMEOUT</label>
+                            <input type="text" id="config-datajud-timeout" class="input-pill" placeholder="12">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">DATAJUD_WORKERS</label>
+                            <input type="text" id="config-datajud-workers" class="input-pill" placeholder="8">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">LOCAL_BACKUP_DIR</label>
+                            <input type="text" id="config-local-backup-dir" class="input-pill" placeholder="C:\\Dados Funcionarios">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">BACKUP_DIR</label>
+                            <input type="text" id="config-backup-dir" class="input-pill" placeholder="C:\\Backups">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">BACKUP_FILE_NAME</label>
+                            <input type="text" id="config-backup-file" class="input-pill" placeholder="backup-dados-funcionarios.json">
+                        </div>
+                    </div>
+                    <div class="mt-4 space-y-2">
+                        <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">Outras variáveis (KEY=VALUE)</label>
+                        <textarea id="config-env-extra" rows="3" class="input-pill resize-none" placeholder="EXEMPLO=123&#10;OUTRA_CHAVE=valor"></textarea>
+                        <p class="text-[10px] text-text-dim">Uma variável por linha. Valores ficam salvos localmente e reaplicados ao iniciar.</p>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="config-section">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="label-caption">Agente Aton</p>
+                            <h4 class="text-white text-xl font-semibold">Controle total da IA de RH</h4>
+                        </div>
+                        <span class="text-[10px] text-text-dim">OpenRouter + DeepSeek</span>
+                    </div>
+
+                    <div class="grid gap-4 mt-4 lg:grid-cols-3">
+                        <div class="info-card space-y-3">
+                            <p class="label-caption">Identidade e acesso</p>
+                            <div class="space-y-1">
+                                <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">Nome do agente</label>
+                                <input type="text" id="config-agent-name" class="input-pill" placeholder="Aton">
+                                <p class="text-[10px] text-text-dim">Exibido nas respostas e mensagens internas.</p>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">OPENROUTER_API_KEY</label>
+                                <input type="password" id="config-agent-key" class="input-pill" placeholder="sk-...">
+                                <p class="text-[10px] text-text-dim">Chave usada por <code>aton_agent.py</code> para autenticar no OpenRouter.</p>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">Modelo / tipo de IA</label>
+                                <select id="config-agent-model" class="input-pill">
+                                    <option value="deepseek/deepseek-r1-0528:free">deepseek/deepseek-r1-0528:free (recomendado)</option>
+                                    <option value="gpt-4o-mini">gpt-4o-mini</option>
+                                    <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+                                    <option value="__custom__">Outro modelo (personalizado)</option>
+                                </select>
+                                <p class="text-[10px] text-text-dim">Escolha o modelo que o agente deverá usar nas respostas.</p>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">Modelo personalizado</label>
+                                <input type="text" id="config-agent-model-custom" class="input-pill" placeholder="ex: openai/gpt-4.1-mini, meta-llama/llama-3.1-70b">
+                                <p class="text-[10px] text-text-dim">Use quando precisar de um modelo que não está na lista.</p>
+                            </div>
+                        </div>
+
+                        <div class="info-card space-y-3">
+                            <p class="label-caption">Personalidade e prompt</p>
+                            <div class="space-y-1">
+                                <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">Como a IA deve agir?</label>
+                                <textarea id="config-agent-behavior" class="input-pill h-24" placeholder="Explique o tom, limites e temas que o agente deve lembrar."></textarea>
+                                <p class="text-[10px] text-text-dim">Descrição enviada ao sistema como prompt adicional.</p>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">Persona / papel</label>
+                                <input type="text" id="config-agent-persona" class="input-pill" placeholder="Especialista em RH, foco em legislação trabalhista">
+                            </div>
+                            <div class="grid gap-3 md:grid-cols-2">
+                                <div class="space-y-1">
+                                    <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">Tom de voz</label>
+                                    <input type="text" id="config-agent-tone" class="input-pill" placeholder="Objetivo, cordial, direto">
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">Idioma principal</label>
+                                    <input type="text" id="config-agent-language" class="input-pill" placeholder="Português (BR)">
+                                </div>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">Estilo de resposta</label>
+                                <select id="config-agent-style" class="input-pill">
+                                    <option value="curta">Curta e direta</option>
+                                    <option value="equilibrada">Equilibrada</option>
+                                    <option value="detalhada">Detalhada</option>
+                                </select>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">Prompt do sistema (override)</label>
+                                <textarea id="config-agent-system-prompt" class="input-pill h-24" placeholder="Use este campo para substituir o prompt padrão da IA."></textarea>
+                                <p class="text-[10px] text-text-dim">Se vazio, o sistema usa o prompt padrão com as regras do agente.</p>
+                            </div>
+                        </div>
+
+                        <div class="info-card space-y-3">
+                            <p class="label-caption">Controles de resposta</p>
+                            <div class="grid gap-3 md:grid-cols-2">
+                                <div class="space-y-1">
+                                    <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">Temperatura</label>
+                                    <input type="number" step="0.1" min="0" max="2" id="config-agent-temperature" class="input-pill" placeholder="0.7">
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">Top P</label>
+                                    <input type="number" step="0.05" min="0" max="1" id="config-agent-top-p" class="input-pill" placeholder="0.9">
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">Max tokens</label>
+                                    <input type="number" step="1" min="64" id="config-agent-max-tokens" class="input-pill" placeholder="800">
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">Presence penalty</label>
+                                    <input type="number" step="0.1" min="-2" max="2" id="config-agent-presence" class="input-pill" placeholder="0.0">
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">Frequency penalty</label>
+                                    <input type="number" step="0.1" min="-2" max="2" id="config-agent-frequency" class="input-pill" placeholder="0.0">
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">Comportamentos extras</label>
+                                <label class="flex items-center gap-2 text-xs text-text-dim"><input type="checkbox" id="config-agent-greeting" class="accent-primary">Saudar o usuário automaticamente</label>
+                                <label class="flex items-center gap-2 text-xs text-text-dim"><input type="checkbox" id="config-agent-time" class="accent-primary">Incluir horário local na mensagem</label>
+                                <label class="flex items-center gap-2 text-xs text-text-dim"><input type="checkbox" id="config-agent-use-links" class="accent-primary">Usar links de dados como contexto</label>
+                                <label class="flex items-center gap-2 text-xs text-text-dim"><input type="checkbox" id="config-agent-cbo" class="accent-primary">Consultar CBO automaticamente</label>
+                            </div>
+                            <p class="text-[10px] text-text-dim">Deixe os campos numéricos vazios para usar o padrão do modelo.</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 mt-6">
+                        <div class="flex items-center justify-between">
+                            <label class="text-[10px] text-text-dim uppercase tracking-[0.3em]">Links de dados para consulta</label>
+                            <button id="agent-links-add" type="button" class="text-[10px] uppercase tracking-[0.3em] text-primary font-bold">Adicionar link</button>
+                        </div>
+                        <div id="agent-links-list" class="space-y-2">
+                            <p class="text-xs text-text-dim">Nenhum link configurado.</p>
+                        </div>
+                        <p class="text-[10px] text-text-dim">Esses links podem ser usados pelo Aton como fonte adicional de informações.</p>
+                    </div>
+
+                    <p class="text-[11px] text-text-dim mt-3">Essas configurações serão lidas pelo script <code class="text-text-main">aton_agent.py</code> antes de fazer chamadas ao OpenRouter.</p>
+                    <p class="text-[11px] text-text-dim">A base da Classificação Brasileira de Ocupações fica disponível em <a class="text-primary underline" href="https://raw.githubusercontent.com/PopularAtacarejo/Candidatos/refs/heads/main/CBO.json" target="_blank" rel="noreferrer">link oficial</a>. O histórico de cada usuário fica em <code class="text-text-main">Aton/mensagens.json</code> no GitHub e é lido/gravaado sempre que o agente conversa.</p>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="config-section">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="label-caption">Conteúdo das páginas</p>
+                            <h4 class="text-white text-xl font-semibold">Personalize todas as telas</h4>
+                        </div>
+                        <button id="page-config-save-btn" class="px-4 py-2 rounded-2xl bg-gradient-to-br from-primary to-accent text-[10px] uppercase tracking-[0.35em] text-white transition-all">Salvar páginas</button>
+                    </div>
+                    <div class="grid gap-4 md:grid-cols-2 mt-4">
+                        <div class="space-y-1">
+                            <label class="text-[10px] uppercase tracking-[0.3em] text-text-dim">Página</label>
+                            <select id="page-config-select" class="input-pill"></select>
+                        </div>
+                        <div class="space-y-1">
+                            <p class="text-[10px] text-text-dim uppercase tracking-[0.3em]">Informações principais</p>
+                            <p class="text-xs text-text-dim">Defina título, subtítulo, links e destaque das páginas do painel.</p>
+                        </div>
+                    </div>
+                    <div class="grid gap-4 md:grid-cols-2 mt-4">
+                        <input id="page-config-title" type="text" class="input-pill" placeholder="Título principal">
+                        <input id="page-config-cta-label" type="text" class="input-pill" placeholder="Texto do botão">
+                    </div>
+                    <textarea id="page-config-description" class="input-pill h-24 mt-3" placeholder="Descrição, subtítulo ou mensagem contextual"></textarea>
+                    <div class="grid gap-4 md:grid-cols-2">
+                        <input id="page-config-notice" type="text" class="input-pill" placeholder="Aviso destacado">
+                        <input id="page-config-cta-url" type="url" class="input-pill" placeholder="Link do botão de ação">
+                    </div>
+                    <div class="mt-4 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <p class="label-caption">Links rápidos</p>
+                            <button id="page-links-add" type="button" class="text-[10px] uppercase tracking-[0.3em] text-primary font-bold">Adicionar link</button>
+                        </div>
+                        <div id="page-links-list" class="space-y-2">
+                            <p class="text-xs text-text-dim">Nenhum link configurado.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="config-section">
+                    <p class="label-caption">Criação de Usuários</p>
+                    <div class="grid gap-4 md:grid-cols-3">
+                        <input type="text" id="config-new-user-name" class="input-pill" placeholder="Nome completo">
+                        <input type="email" id="config-new-user-email" class="input-pill" placeholder="E-mail">
+                        <input type="text" id="config-new-user-role" class="input-pill" placeholder="Função (ex: Desenvolvedor)">
+                    </div>
+                    <div class="flex flex-wrap gap-3 mt-3">
+                        <button id="create-user-btn" class="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-white/5 border border-white/10 text-white font-bold transition-all hover:border-primary/40">Gerar credenciais</button>
+                        <button id="save-config-btn" class="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-primary to-accent text-white font-bold transition-all hover:translate-y-0.5 shadow-glow-primary">Salvar configurações</button>
+                    </div>
+                    <div id="config-feedback" class="text-[12px] text-white/80 mt-2"></div>
+                    <div id="config-users-list" class="space-y-2 mt-4">
+                        <p class="text-xs uppercase tracking-[0.4em] text-text-dim">Usuários registrados</p>
+                        <div class="text-sm text-text-dim">Carregando...</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div class="modal fade" id="editUserModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-elevated border border-white/10">
+                <div class="modal-header border-b border-white/5">
+                    <h5 class="modal-title text-white text-sm font-bold tracking-[0.4em] uppercase">Editar usuário</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body space-y-4">
+                    <div>
+                        <p class="text-[10px] uppercase tracking-[0.4em] text-text-dim mb-1">Nome</p>
+                        <input id="edit-user-name" type="text" class="input-pill" placeholder="Nome completo">
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase tracking-[0.4em] text-text-dim mb-1">E-mail</p>
+                        <input id="edit-user-email" type="email" class="input-pill" placeholder="usuario@exemplo.com">
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase tracking-[0.4em] text-text-dim mb-1">Função</p>
+                        <input id="edit-user-role" type="text" class="input-pill" placeholder="DESENVOLVEDOR">
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase tracking-[0.4em] text-text-dim mb-2">Páginas permitidas</p>
+                        <div id="edit-user-pages" class="grid gap-2 md:grid-cols-2 text-xs text-text-dim"></div>
+                        <p class="text-[10px] text-text-dim mt-2">Se nada for marcado, o usuário terá acesso completo.</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase tracking-[0.4em] text-text-dim mb-1">Nova senha</p>
+                        <input id="edit-user-password" type="password" class="input-pill" placeholder="Deixe em branco para manter">
+                        <p class="text-[10px] text-text-dim mt-1">Informe um valor somente se quiser trocar a senha.</p>
+                    </div>
+                </div>
+                <div class="modal-footer border-t border-white/5">
+                    <button type="button" class="px-4 py-2 rounded-2xl text-sm text-text-dim border border-white/10 bg-white/5 hover:border-primary/40" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" id="edit-user-save-btn" class="px-5 py-2 rounded-2xl text-sm font-bold bg-gradient-to-r from-primary to-accent text-white shadow-glow-primary">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="scripts/sidebar.js"></script>
+    <script src="scripts/admin-common.js"></script>
+     <script src="scripts/aton-widget.js" defer></script>
+    <script src="scripts/configuracoes.js"></script>
+    <script src="scripts/theme-toggle.js"></script>
+    <script>
+        function updateHeaderClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('pt-BR', { hour12: false });
+            const timeElement = document.getElementById('current-time');
+            if (timeElement) timeElement.textContent = timeString;
+        }
+        function getGreeting() {
+            const hour = new Date().getHours();
+            if (hour >= 5 && hour < 12) return "Bom dia";
+            if (hour >= 12 && hour < 18) return "Boa tarde";
+            return "Boa noite";
+        }
+        function getStoredUserData() {
+            const rawUser = localStorage.getItem('admin_user') || localStorage.getItem('user');
+            if (!rawUser) return {};
+            try {
+                return JSON.parse(rawUser) || {};
+            } catch {
+                return {};
+            }
+        }
+        function buildAvatarUrl(name, fallback) {
+            if (fallback) return fallback;
+            const encoded = encodeURIComponent(name.trim() || "Usuário");
+            return `https://ui-avatars.com/api/?name=${encoded}&background=0F172A&color=3B82F6`;
+        }
+        function setupUserHeader() {
+            const userData = getStoredUserData();
+            const userName = (userData.nome || userData.name || userData.email || "Administrador").trim();
+            const userRole = (userData.funcao || userData.role || "DESENVOLVEDOR").trim();
+            const avatarSource = buildAvatarUrl(userName, userData.avatar_url || userData.foto || userData.photo || userData.avatar);
+
+            const greetingElement = document.getElementById('user-greeting');
+            if (greetingElement) {
+                greetingElement.textContent = `${getGreeting()}, ${userName}`;
+            }
+            const nameElement = document.getElementById('user-name-display');
+            if (nameElement) {
+                nameElement.textContent = userName;
+            }
+            const roleElement = document.getElementById('user-role-display');
+            if (roleElement) {
+                roleElement.textContent = userRole;
+            }
+            const avatarElement = document.getElementById('user-avatar');
+            if (avatarElement) {
+                avatarElement.src = avatarSource;
+                avatarElement.alt = userName;
+            }
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            updateHeaderClock();
+            setInterval(updateHeaderClock, 1000);
+            setupUserHeader();
+        });
+    </script>
+</body>
+</html>

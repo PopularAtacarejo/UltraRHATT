@@ -1,0 +1,10 @@
+﻿node_modules/
+.venv/
+__pycache__/
+*.pyc
+repo_backup/
+Candidatos-main/
+uploads/
+.env
+server.log
+server.err

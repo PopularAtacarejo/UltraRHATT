@@ -1,0 +1,2123 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidaturas - Painel Administrativo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <!-- CSS Frameworks -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3B82F6",
+                        "primary-hover": "#2563EB",
+                        "accent": "#8B5CF6",
+                        "bg-dark": "#030712",
+                        "surface-dark": "#0F172A",
+                        "surface-elevated": "#1E293B",
+                        "border-dark": "#334155",
+                        "text-main": "#F1F5F9",
+                        "text-dim": "#94A3B8",
+                        "success": "#10B981",
+                        "warning": "#F59E0B",
+                        "danger": "#EF4444"
+                    },
+                    fontFamily: {
+                        "sans": ["Plus Jakarta Sans", "Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"]
+                    },
+                    boxShadow: {
+                        'glow-primary': '0 0 25px rgba(59, 130, 246, 0.25)',
+                        'glow-accent': '0 0 25px rgba(139, 92, 246, 0.25)'
+                    }
+                },
+            },
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer base {
+            body { 
+                @apply bg-bg-dark text-text-main font-sans antialiased;
+            }
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { @apply bg-transparent; }
+        ::-webkit-scrollbar-thumb { @apply bg-border-dark rounded-full hover:bg-primary/50 transition-colors; }
+
+        .glass { @apply backdrop-blur-md bg-surface-dark/80 border border-white/5; }
+        .glass-elevated { @apply backdrop-blur-xl bg-surface-elevated/90 border border-white/10; }
+
+        .sidebar-item {
+            @apply flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 text-text-dim hover:text-white hover:bg-white/5;
+        }
+        .sidebar-item.active {
+            @apply bg-gradient-to-r from-primary/10 to-accent/10 text-primary border border-primary/20 shadow-glow-primary;
+        }
+
+        .table-section { @apply glass rounded-3xl overflow-hidden border border-white/5; }
+        .table-header-cell { @apply px-6 py-4 text-[10px] font-bold text-text-dim uppercase tracking-widest bg-white/[0.02]; }
+        .table-row { @apply transition-colors duration-200 hover:bg-white/[0.02] border-b border-white/5; }
+
+        .tool-tab { @apply px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-text-dim hover:text-white; }
+        .tool-tab.active { @apply bg-primary/10 text-primary; }
+
+        .filter-input { @apply bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-[11px] text-white placeholder:text-text-dim focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all w-full; }
+        .filters-panel {
+            @apply relative rounded-[2.25rem] border border-white/10 bg-surface-elevated/80 shadow-[0_30px_80px_-35px_rgba(2,6,23,0.9)];
+        }
+        .filters-panel::before {
+            content: '';
+            @apply absolute inset-0 rounded-[2.25rem];
+            background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.35), transparent 45%), radial-gradient(circle at bottom left, rgba(139, 92, 246, 0.35), transparent 55%);
+            mix-blend-mode: screen;
+            pointer-events: none;
+        }
+        .filters-panel > * {
+            position: relative;
+            z-index: 2;
+        }
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 1.25rem;
+        }
+        .filter-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1.8rem;
+            padding: 1.25rem;
+            min-height: 160px;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.75), rgba(30, 41, 59, 0.95));
+            border: 1px solid rgba(99, 102, 241, 0.35);
+            box-shadow: 0 25px 50px rgba(2, 6, 23, 0.65);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+        .filter-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(59, 130, 246, 0.6);
+            box-shadow: 0 30px 60px rgba(2, 6, 23, 0.75);
+        }
+        .filter-card:focus-within {
+            border-color: rgba(59, 130, 246, 0.85);
+            box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.3), 0 30px 60px rgba(2, 6, 23, 0.75);
+        }
+        .filter-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(120deg, rgba(59, 130, 246, 0.45), rgba(139, 92, 246, 0.6));
+            -webkit-mask:
+                linear-gradient(#fff 0 0) content-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+        .filter-card > * {
+            position: relative;
+            z-index: 2;
+        }
+        .filter-label {
+            color: #f8fafc;
+            letter-spacing: 0.25em;
+            font-size: 0.7rem;
+            text-shadow: 0 4px 14px rgba(15, 23, 42, 0.35);
+        }
+        .filter-card-title {
+            color: #e0e7ff;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            text-transform: uppercase;
+        }
+        .filter-control {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem 1rem;
+            border-radius: 1.25rem;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(241, 245, 249, 0.2);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+        .filter-control:focus-within {
+            border-color: rgba(59, 130, 246, 0.8);
+            background: rgba(15, 23, 42, 0.95);
+        }
+        .filter-control span {
+            font-size: 1.1rem;
+            color: rgba(248, 250, 252, 0.7);
+        }
+        .filter-select-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        .filter-select-wrapper::after {
+            content: 'expand_more';
+            font-family: 'Material Symbols Rounded';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(248, 250, 252, 0.8);
+            pointer-events: none;
+        }
+        .filter-select-wrapper select {
+            width: 100%;
+            padding: 0.65rem 1rem;
+            border-radius: 1.25rem;
+            border: 1px solid rgba(147, 197, 253, 0.35);
+            background: rgba(15, 23, 42, 0.85);
+            font-size: 0.85rem;
+            color: #f8fafc;
+            appearance: none;
+            box-shadow: 0 10px 30px rgba(2, 6, 23, 0.4);
+        }
+        .filter-select-wrapper select:focus {
+            outline: 2px solid rgba(59, 130, 246, 0.7);
+            border-color: rgba(59, 130, 246, 0.8);
+            background: rgba(15, 23, 42, 0.95);
+        }
+        .filter-select-wrapper select::-ms-expand {
+            display: none;
+        }
+        .filter-chip-row { @apply flex flex-wrap items-center gap-2 border border-white/5 rounded-2xl p-3 mt-4 bg-white/5; }
+        .filter-chip { @apply flex items-center gap-1 bg-bg-dark/80 border border-white/15 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.4em] text-primary; }
+        .filter-chip small { @apply text-[8px] font-mono text-text-dim lowercase; }
+        .quick-filter-pill {
+            @apply text-[10px] font-bold uppercase tracking-[0.4em] px-4 py-2 rounded-full border border-white/15 bg-white/5 text-white transition duration-200;
+        }
+        .quick-filter-pill.active {
+            @apply bg-gradient-to-r from-primary to-accent text-white border-transparent shadow-[0_20px_60px_-25px_rgba(59,130,246,0.95)];
+        }
+        .candidate-unseen { @apply bg-gradient-to-r from-red-900/70 to-red-900/50 border-red-500/40; }
+        .view-history { @apply flex flex-wrap gap-2 mt-2; }
+        .view-history-item { @apply text-[9px] tracking-[0.4em] uppercase text-text-dim bg-white/5 border border-white/10 rounded-full px-3 py-1; }
+        .experience-indicator {
+            @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-emerald-400/30 text-[9px] font-bold uppercase tracking-[0.35em] text-emerald-200 bg-emerald-400/10 shadow-[0_10px_25px_rgba(16,185,129,0.25)];
+        }
+        .experience-indicator i {
+            @apply text-[12px] text-emerald-300;
+        }
+        .info-strip {
+            @apply glass rounded-3xl flex items-center justify-between px-6 py-3 mx-8 mt-4 border border-white/10 shadow-2xl;
+        }
+        .info-strip .greeting { @apply text-sm font-bold text-white; }
+        .info-strip .status-line { @apply flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.4em] text-text-dim; }
+        .brand-badge { @apply flex items-center gap-3 text-white font-bold tracking-tight; }
+        .brand-badge .icon {
+            @apply w-10 h-10 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white;
+        }
+        .view-action {
+            @apply flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 text-white font-semibold transition-all duration-200 border border-white/10;
+        }
+        .view-action:hover {
+            background: rgba(59, 130, 246, 0.8);
+            color: #fff;
+            border-color: rgba(59, 130, 246, 0.6);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.25);
+        }
+        .delete-action {
+            @apply flex items-center gap-2 px-4 py-2 rounded-full bg-danger/10 text-danger font-semibold transition-all duration-200 border border-danger/20;
+        }
+        .delete-action:hover {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fff;
+            border-color: rgba(239, 68, 68, 0.6);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.25);
+        }
+        #qr-panel {
+            z-index: 60;
+        }
+
+        .modal-content { @apply glass-elevated border-white/10 rounded-[2rem] overflow-hidden; }
+        .modal-header { @apply border-b border-white/5 p-8; }
+        .modal-body { @apply p-8; }
+        .modal-footer { @apply border-t border-white/5 p-6; }
+
+        .info-card { @apply bg-white/5 border border-white/5 rounded-2xl p-5 transition-all hover:border-primary/30; }
+        .info-label { @apply text-[10px] font-bold text-text-dim uppercase tracking-widest mb-1; }
+        .info-value { @apply text-sm font-semibold text-white; }
+        .observacao-history {
+            @apply bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3;
+        }
+        .observacao-entry {
+            @apply bg-white/5 border border-white/10 rounded-xl p-3 space-y-1;
+        }
+        .observacao-entry-meta {
+            @apply text-[10px] font-mono uppercase tracking-[0.3em] text-text-dim;
+        }
+
+        .user-dropdown-menu {
+            @apply absolute right-0 mt-2 w-48 glass-elevated rounded-2xl py-2 shadow-2xl opacity-0 invisible translate-y-2 transition-all duration-200 z-[100];
+        }
+        .user-menu-container:hover .user-dropdown-menu {
+            @apply opacity-100 visible translate-y-0;
+        }
+
+        .status-badge { @apply px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider; }
+        .status-novo { @apply bg-primary/10 text-primary; }
+        .status-analise { @apply bg-accent/10 text-accent; }
+        .status-entrevista { @apply bg-warning/10 text-warning; }
+        .status-aprovado { @apply bg-success/10 text-success; }
+        .status-reprovado { @apply bg-danger/10 text-danger; }
+
+        .material-symbols-rounded { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        @layer utilities {
+            .shadow-glow-primary {
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+            }
+        }
+    </style>
+    <style>
+        .copy-action {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.85rem;
+            width: 34px;
+            height: 34px;
+            border-radius: 0.75rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(249, 250, 251, 0.75);
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .copy-action:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .copy-action:active {
+            transform: translateY(0);
+        }
+
+        .copy-feedback {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            background: rgba(15, 23, 42, 0.85);
+            color: #f8fafc;
+            padding: 0.65rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.45);
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            pointer-events: none;
+        }
+
+        .copy-feedback.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+
+    <style>
+        .brand-bolt-wrap {
+            position: relative;
+        }
+        .brand-bolt-wrap::after {
+            content: "";
+            position: absolute;
+            inset: -6px;
+            border-radius: 18px;
+            background: radial-gradient(circle at 40% 30%, rgba(250, 204, 21, 0.85), rgba(250, 204, 21, 0.25) 45%, rgba(250, 204, 21, 0) 70%);
+            filter: blur(10px);
+            opacity: 0.0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .brand-bolt-wrap:hover::after {
+            opacity: 1;
+        }
+        .brand-bolt {
+            color: #facc15;
+            filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.9)) drop-shadow(0 0 22px rgba(250, 204, 21, 0.7));
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+        .brand-bolt-wrap:hover .brand-bolt {
+            transform: scale(1.18) rotate(-2deg);
+            filter: drop-shadow(0 0 16px rgba(250, 204, 21, 1)) drop-shadow(0 0 34px rgba(250, 204, 21, 0.85));
+        }
+    </style>
+
+
+    <style>
+        .brand-bolt-wrap::after { display: none; }
+        .brand-initials {
+            font-weight: 800;
+            font-size: 0.9rem;
+            letter-spacing: 0.12em;
+            color: #e2e8f0;
+            text-transform: uppercase;
+        }
+    </style>
+    <style>
+        .experience-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.1rem 0.8rem;
+            border-radius: 999px;
+            font-size: 0.65rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        .experience-pill.sim {
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.6);
+            background: rgba(16, 185, 129, 0.08);
+        }
+        .experience-pill.nao {
+            color: #f97316;
+            border: 1px solid rgba(249, 115, 22, 0.6);
+            background: rgba(249, 115, 22, 0.08);
+        }
+        .experience-functions {
+            font-size: 0.7rem;
+            color: rgba(241, 245, 249, 0.75);
+            margin-top: 0.35rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+    </style>
+
+</head>
+<body class="flex h-screen overflow-hidden">
+    <!-- Sidebar -->
+    <aside class="w-72 glass border-r border-border-dark flex flex-col p-6 z-50" data-sidebar-active="candidatos">
+        <div class="flex items-center gap-4 mb-10 px-2">
+            <div>
+                <h1 class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white to-text-dim bg-clip-text text-transparent">UltraRH</h1>
+                <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">Admin Panel</p>
+            </div>
+        </div>
+
+                <nav id="sidebar-links" class="flex-1 space-y-2 overflow-y-auto pr-2">
+        </nav>
+
+
+        <div class="mt-auto pt-6 border-t border-border-dark space-y-2">
+            <button onclick="cleanupCandidates()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-text-dim hover:text-danger hover:bg-danger/5 transition-all text-sm font-medium">
+                <span class="material-symbols-rounded">delete_sweep</span>
+                Limpar Expirados
+            </button>
+            <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-text-dim hover:text-white hover:bg-white/5 transition-all text-sm font-medium">
+                <span class="material-symbols-rounded">logout</span>
+                Sair do Sistema
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col min-w-0 bg-bg-dark relative overflow-hidden">
+        <!-- Background Glows -->
+        <div class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>
+        <div class="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <!-- Header -->
+        <header class="h-20 glass border-b border-border-dark flex items-center justify-between px-8 z-40">
+            <div class="flex items-center gap-6">
+                <div class="flex flex-col">
+                    <div class="flex items-center gap-2">
+                        <h2 id="user-greeting" class="text-sm font-bold text-white">Bom dia, Jeferson</h2>
+                        <span class="text-xs text-text-dim">|</span>
+                        <span id="current-time" class="text-xs font-mono text-primary font-bold">10:02:54</span>
+                    </div>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
+                        <span class="text-[10px] font-mono text-text-dim uppercase tracking-wider">Sistema Online</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-6">
+                <div class="relative user-menu-container">
+                    <div class="flex items-center gap-3 pl-6 border-l border-border-dark cursor-pointer group">
+                        <div class="text-right hidden sm:block">
+                            <p id="user-name-display" class="text-xs font-bold text-white group-hover:text-primary transition-colors">Jeferson</p>
+                            <p id="user-role-display" class="text-[10px] text-text-dim font-mono uppercase">Desenvolvedor</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-surface-elevated border border-border-dark flex items-center justify-center overflow-hidden group-hover:border-primary transition-all">
+                            <img id="user-avatar" src="https://ui-avatars.com/api/?name=Jeferson&background=0F172A&color=3B82F6" alt="Jeferson">
+                        </div>
+                        <span class="material-symbols-rounded text-text-dim group-hover:text-white transition-colors">expand_more</span>
+                    </div>
+                    <div class="user-dropdown-menu">
+                        <div class="px-4 py-3 border-b border-white/5">
+                            <p class="text-[10px] font-bold text-text-dim uppercase tracking-widest">Conta</p>
+                        </div>
+                        <a href="perfil.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-text-dim hover:text-white hover:bg-white/5 transition-all">
+                            <span class="material-symbols-rounded text-lg">person</span>
+                            Meu Perfil
+                        </a>
+                        <a href="configuracoes.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-text-dim hover:text-white hover:bg-white/5 transition-all">
+                            <span class="material-symbols-rounded text-lg">settings</span>
+                            Configurações
+                        </a>
+                        <div class="h-px bg-white/5 my-1"></div>
+                        <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-danger hover:bg-danger/5 transition-all">
+                            <span class="material-symbols-rounded text-lg">logout</span>
+                            Sair da Conta
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="flex-1 overflow-y-auto p-8 space-y-8 relative z-10">
+            <!-- Toolbar & Advanced Filters -->
+            <div class="space-y-6">
+                <div class="flex flex-wrap items-center justify-between gap-6">
+                    <div class="flex items-center gap-2 bg-white/5 p-1.5 rounded-xl border border-white/5">
+                        <button class="tool-tab active" onclick="filterByTab('Todos', this)">Todos</button>
+                        <button class="tool-tab" onclick="filterByTab('Vistos', this)">Vistos</button>
+                        <button class="tool-tab" onclick="filterByTab('Novos', this)">Novos</button>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <button onclick="toggleAdvancedFilters()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/5 text-sm font-semibold text-text-dim hover:text-white transition-all">
+                            <span class="material-symbols-rounded text-lg">filter_list</span>
+                            Filtros Avançados
+                        </button>
+                        <button onclick="clearFilters()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-danger/10 border border-danger/20 text-sm font-semibold text-danger hover:bg-danger/20 transition-all">
+                            <span class="material-symbols-rounded text-lg">filter_alt_off</span>
+                            Limpar
+                        </button>
+                        <button onclick="loadCandidatos()" class="p-2.5 rounded-xl bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-all">
+                            <span class="material-symbols-rounded">refresh</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Advanced Filters Panel -->
+                <div id="advanced-filters-panel" class="filters-panel p-6 hidden animate-fade-in">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-[0.4em] text-text-dim">Filtros inteligentes</p>
+                            <p class="text-sm text-text-dim">Refine a lista com combinações rápidas e inteligentes.</p>
+                        </div>
+                        <span class="text-[10px] font-mono text-primary uppercase tracking-[0.3em]">Atualizado sempre</span>
+                    </div>
+                    <div class="mb-6 flex flex-wrap items-center gap-3">
+                        <span class="text-[9px] uppercase tracking-[0.4em] text-text-dim">Combinações rápidas</span>
+                        <div class="flex flex-wrap gap-2">
+                            <button type="button" class="quick-filter-pill" data-quick-date="today">Hoje</button>
+                            <button type="button" class="quick-filter-pill" data-quick-date="last7">Últimos 7 dias</button>
+                            <button type="button" class="quick-filter-pill" data-quick-date="last30">Últimos 30 dias</button>
+                        </div>
+                    </div>
+                    <div class="filters-grid">
+                        <div class="filter-card">
+                            <div class="filter-label flex items-center justify-between">
+                                <span>Busca Geral (Nome/CPF)</span>
+                                <span class="text-[10px] text-primary font-mono uppercase tracking-[0.4em]">⌕</span>
+                            </div>
+                            <div class="filter-control">
+                                <span class="material-symbols-rounded text-white/70">search</span>
+                                <input type="text" id="search-candidatos" placeholder="Ex: Carlos ou 123.456..." class="filter-input" oninput="applyFilters()">
+                            </div>
+                        </div>
+                        <div class="filter-card">
+                            <div class="filter-label flex items-center justify-between">
+                                <span>Vaga</span>
+                                <small class="text-[10px] text-text-dim lowercase">baseada em dados</small>
+                            </div>
+                            <div class="filter-select-wrapper">
+                                <select id="filter-vaga" class="filter-input" onchange="applyFilters()">
+                                    <option value="">Todas as Vagas</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="filter-card">
+                            <div class="filter-label flex items-center justify-between">
+                                <span>Cidade</span>
+                                <small class="text-[10px] text-text-dim lowercase">filtro geográfico</small>
+                            </div>
+                            <div class="filter-select-wrapper">
+                                <select id="filter-cidade" class="filter-input" onchange="applyFilters()">
+                                    <option value="">Todas as Cidades</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="filter-card">
+                            <div class="filter-label flex items-center justify-between">
+                                <span>Bairro</span>
+                                <small class="text-[10px] text-text-dim lowercase">micro-localização</small>
+                            </div>
+                            <div class="filter-select-wrapper">
+                                <select id="filter-bairro" class="filter-input" onchange="applyFilters()">
+                                    <option value="">Todos os Bairros</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="filter-card">
+                            <div class="filter-label flex items-center justify-between">
+                                <span>Status</span>
+                                <span class="text-[10px] text-primary font-mono uppercase tracking-[0.4em]">phase</span>
+                            </div>
+                            <div class="filter-select-wrapper">
+                                <select id="filter-candidato-status" class="filter-input" onchange="applyFilters()">
+                                    <option value="">Todos Status</option>
+                                    <option value="Novo">Novo</option>
+                                    <option value="Em análise">Em análise</option>
+                                    <option value="Entrevista">Entrevista</option>
+                                    <option value="Aprovado">Aprovado</option>
+                                    <option value="Reprovado">Reprovado</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="filter-card">
+                            <div class="filter-label flex items-center justify-between">
+                                <span>Experiência</span>
+                                <span class="text-[10px] text-primary font-mono uppercase tracking-[0.4em]">carteira</span>
+                            </div>
+                            <div class="space-y-3 mt-2">
+                                <div class="filter-select-wrapper">
+                                    <select id="filter-experience-status" class="filter-input" onchange="applyFilters()">
+                                        <option value="">Todas</option>
+                                        <option value="com">Com experiência</option>
+                                        <option value="sem">Sem experiência</option>
+                                    </select>
+                                </div>
+                                <div class="filter-control">
+                                    <span class="material-symbols-rounded text-white/70">work_history</span>
+                                    <input type="text" id="filter-experience-text" placeholder="Ex: Operador de caixa" class="filter-input" oninput="applyFilters()">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="filter-card">
+                            <p class="filter-label">Período (Início)</p>
+                            <div class="filter-icon-input">
+                                <input type="date" id="filter-date-start" class="filter-input" onchange="applyFilters()">
+                                <span class="material-symbols-rounded text-white/60">calendar_month</span>
+                            </div>
+                        </div>
+                        <div class="filter-card">
+                            <p class="filter-label">Período (Fim)</p>
+                            <div class="filter-icon-input">
+                                <input type="date" id="filter-date-end" class="filter-input" onchange="applyFilters()">
+                                <span class="material-symbols-rounded text-white/60">calendar_month</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="active-filter-chips" class="filter-chip-row mt-4">
+                        <span class="text-[10px] uppercase tracking-[0.4em] text-text-dim">Sem filtros ativos</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table Section -->
+            <div class="table-section">
+                <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                            <tr>
+                                <th class="table-header-cell">Candidato</th>
+                                <th class="table-header-cell">Vaga</th>
+                                <th class="table-header-cell">Contato</th>
+                                <th class="table-header-cell">Data</th>
+                                <th class="table-header-cell">Status</th>
+                                <th class="table-header-cell text-right">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="candidatos-table" class="divide-y divide-white/5">
+                            <!-- Rows will be injected here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Ver Candidato -->
+    <div class="modal fade" id="viewCandidateModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center">
+                            <span class="material-symbols-rounded text-primary text-3xl">person</span>
+                        </div>
+                        <div>
+                            <h5 class="text-2xl font-bold text-white mb-1" id="candidate-name">Nome do Candidato</h5>
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm text-text-dim" id="candidate-vaga">Vaga Selecionada</span>
+                                <span class="text-xs text-white/20">•</span>
+                                <span class="text-xs text-text-dim font-mono" id="candidate-enviado-em">Enviado em: --/--/--</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div id="candidate-status-badge"></div>
+                        <button type="button" class="p-2 rounded-xl hover:bg-white/5 text-text-dim transition-all" data-bs-dismiss="modal">
+                            <span class="material-symbols-rounded">close</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Left Column: Info -->
+                        <div class="lg:col-span-2 space-y-8">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="info-card relative">
+                                    <button type="button" class="copy-action" aria-label="Copiar CPF" onclick="copyField('candidate-cpf', 'CPF')">
+                                        <span class="material-symbols-rounded text-sm">content_copy</span>
+                                    </button>
+                                    <p class="info-label">CPF</p>
+                                    <p class="info-value font-mono" id="candidate-cpf">---.---.------</p>
+                                </div>
+                                <div class="info-card relative">
+                                    <button type="button" class="copy-action" aria-label="Copiar telefone" onclick="copyField('candidate-telefone', 'Telefone')">
+                                        <span class="material-symbols-rounded text-sm">content_copy</span>
+                                    </button>
+                                    <p class="info-label">Telefone / WhatsApp</p>
+                                    <p class="info-value" id="candidate-telefone">(--) ----- ----</p>
+                                    <div class="mt-3 flex flex-wrap gap-3">
+                                        <button type="button" class="flex items-center gap-1 px-3 py-1.5 rounded-full border border-white/10 text-sm font-semibold text-white hover:border-green-300 hover:text-green-300 transition-all" onclick="startWhatsAppConversation()">
+                                            <i class="bi bi-whatsapp text-lg text-green-400"></i>
+                                            Iniciar conversa
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="info-card md:col-span-2 relative">
+                                    <button type="button" class="copy-action" aria-label="Copiar e-mail" onclick="copyField('candidate-email', 'E-mail')">
+                                        <span class="material-symbols-rounded text-sm">content_copy</span>
+                                    </button>
+                                    <p class="info-label">E-mail de Contato</p>
+                                    <p class="info-value" id="candidate-email">contato@email.com</p>
+                                </div>
+                                <div class="info-card md:col-span-2">
+                                    <p class="info-label">Experiência</p>
+                                    <p class="info-value" id="candidate-experience-badge">—</p>
+                                    <p class="text-xs text-text-dim mt-1" id="candidate-experience-functions">—</p>
+                                    <div id="candidate-experience-details" class="mt-3 space-y-2 text-xs text-text-dim"></div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <h6 class="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                                    <span class="material-symbols-rounded text-sm text-primary">location_on</span>
+                                    Localização
+                                </h6>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="info-card relative">
+                                        <button type="button" class="copy-action" aria-label="Copiar CEP" onclick="copyField('candidate-cep', 'CEP')">
+                                            <span class="material-symbols-rounded text-sm">content_copy</span>
+                                        </button>
+                                        <p class="info-label">CEP</p>
+                                        <p class="info-value" id="candidate-cep">----- ---</p>
+                                    </div>
+                                    <div class="info-card relative">
+                                        <button type="button" class="copy-action" aria-label="Copiar cidade" onclick="copyField('candidate-cidade', 'Cidade / UF')">
+                                            <span class="material-symbols-rounded text-sm">content_copy</span>
+                                        </button>
+                                        <p class="info-label">Cidade / UF</p>
+                                        <p class="info-value" id="candidate-cidade">Cidade - UF</p>
+                                    </div>
+                                    <div class="info-card relative">
+                                        <button type="button" class="copy-action" aria-label="Copiar bairro" onclick="copyField('candidate-bairro', 'Bairro')">
+                                            <span class="material-symbols-rounded text-sm">content_copy</span>
+                                        </button>
+                                        <p class="info-label">Bairro</p>
+                                        <p class="info-value" id="candidate-bairro">Bairro</p>
+                                    </div>
+                                    <div class="info-card relative md:col-span-3">
+                                        <button type="button" class="copy-action" aria-label="Copiar endereço" onclick="copyField('candidate-rua', 'Endereço')">
+                                            <span class="material-symbols-rounded text-sm">content_copy</span>
+                                        </button>
+                                        <p class="info-label">Endereço Completo</p>
+                                        <p class="info-value" id="candidate-rua">Rua...</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-3">
+                                <a id="candidate-curriculo-link" class="flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl bg-primary text-white font-bold hover:bg-primary-hover transition-all shadow-lg shadow-primary/20" target="_blank" href="#">
+                                    <span class="material-symbols-rounded">download</span>
+                                    Baixar Currículo
+                                </a>
+                                <button type="button" class="flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-bold hover:bg-white/10 transition-all" onclick="previewCurriculo()">
+                                    <span class="material-symbols-rounded">visibility</span>
+                                    Visualizar Agora
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Management -->
+                        <div class="space-y-6 bg-white/[0.02] p-6 rounded-3xl border border-white/5">
+                            <h6 class="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                                <span class="material-symbols-rounded text-sm text-accent">settings</span>
+                                Gestão do Candidato
+                            </h6>
+                            
+                            <form id="edit-candidate-form" class="space-y-4">
+                                <input type="hidden" id="edit-candidate-id">
+                                
+                                <div>
+                                    <label class="text-[10px] font-bold text-text-dim uppercase tracking-widest mb-2 block" for="edit-candidate-status">Alterar Status</label>
+                                    <select id="edit-candidate-status" class="w-full bg-surface-dark border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:ring-primary/50 transition-all">
+                                        <option value="Novo">Novo</option>
+                                        <option value="Em análise">Em análise</option>
+                                        <option value="Entrevista">Entrevista</option>
+                                        <option value="Aprovado">Aprovado</option>
+                                        <option value="Reprovado">Reprovado</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="text-[10px] font-bold text-text-dim uppercase tracking-widest mb-2 block" for="edit-candidate-entrevistador">Entrevistador Responsável</label>
+                                    <input id="edit-candidate-entrevistador" class="w-full bg-surface-dark border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:ring-primary/50 transition-all" placeholder="Nome do responsável">
+                                </div>
+
+                                <div>
+                                    <label class="text-[10px] font-bold text-text-dim uppercase tracking-widest mb-2 block" for="edit-candidate-data-entrevista">Agendar Entrevista</label>
+                                    <input type="datetime-local" id="edit-candidate-data-entrevista" class="w-full bg-surface-dark border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:ring-primary/50 transition-all">
+                                </div>
+
+                                <div>
+                                    <label class="text-[10px] font-bold text-text-dim uppercase tracking-widest mb-2 block" for="edit-candidate-observacoes">Observações Internas</label>
+                                    <textarea id="edit-candidate-observacoes" rows="4" class="w-full bg-surface-dark border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:ring-primary/50 transition-all placeholder:text-text-dim/30" placeholder="Notas sobre o perfil, comportamento ou habilidades..."></textarea>
+                                </div>
+                                <div>
+                                    <div class="flex items-center justify-between mb-2">
+                                        <label class="text-[10px] font-bold text-text-dim uppercase tracking-widest">Histórico de Observações</label>
+                                        <span class="text-[10px] font-mono text-text-dim">últimas 5</span>
+                                    </div>
+                                    <div id="candidate-observacoes-history" class="observacao-history">
+                                        <p class="text-[10px] text-text-dim/70 italic">Nenhuma observação registrada</p>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="pt-4 border-t border-white/5">
+                                <p id="candidate-visualizado" class="text-[10px] text-text-dim italic text-center"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    <!-- Modal Currículo -->
+    <div class="modal fade" id="curriculoPreviewModal" tabindex="-1" aria-labelledby="curriculoPreviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="curriculoPreviewModalLabel">Visualização do Currículo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="ratio ratio-4x3">
+                        <iframe id="curriculo-preview-frame" src="" style="border: none; min-height: 600px;"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="copy-feedback" class="copy-feedback" aria-live="polite"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="scripts/sidebar.js"></script>
+         <script src="scripts/aton-widget.js" defer></script>
+    <script src="scripts/admin-common.js"></script>
+    <script>
+        const fallbackCandidatos = [
+            {
+                id: "1",
+                nome: "Carlos Eduardo Silva",
+                cpf: "123.456.789-00",
+                vaga: "Operador de Caixa",
+                departamento: "Operações",
+                telefone: "(11) 98765-4321",
+                email: "carlos.silva@email.com",
+                enviado_em: "2026-01-20T10:30:00",
+                status: "Novo",
+                cep: "01001-000",
+                cidade: "São Paulo - SP",
+                bairro: "Centro",
+                rua: "Praça da Sé",
+                arquivo_url: "#",
+                view_history: []
+            },
+            {
+                id: "2",
+                nome: "Ana Paula Oliveira",
+                cpf: "234.567.890-11",
+                vaga: "Repositor",
+                departamento: "Loja",
+                telefone: "(11) 97654-3210",
+                email: "ana.oliveira@email.com",
+                enviado_em: "2026-01-19T11:15:00",
+                status: "Em análise",
+                cep: "13010-000",
+                cidade: "Campinas - SP",
+                bairro: "Centro",
+                rua: "Rua Treze de Maio",
+                arquivo_url: "#",
+                view_history: []
+            },
+            {
+                id: "3",
+                nome: "Roberto Souza Santos",
+                cpf: "345.678.901-22",
+                vaga: "Açougueiro",
+                departamento: "Açougue",
+                telefone: "(11) 96543-2109",
+                email: "roberto.souza@email.com",
+                enviado_em: "2026-01-18T09:45:00",
+                status: "Entrevista",
+                cep: "07010-000",
+                cidade: "Guarulhos - SP",
+                bairro: "Centro",
+                rua: "Rua Dom Pedro II",
+                arquivo_url: "#",
+                view_history: []
+            },
+            {
+                id: "4",
+                nome: "Fernanda Lima Costa",
+                cpf: "456.789.012-33",
+                vaga: "Promotor",
+                departamento: "Comercial",
+                telefone: "(11) 95432-1098",
+                email: "fernanda.lima@email.com",
+                enviado_em: "2026-01-17T14:05:00",
+                status: "Aprovado",
+                cep: "18010-000",
+                cidade: "Sorocaba - SP",
+                bairro: "Centro",
+                rua: "Rua XV de Novembro",
+                arquivo_url: "#",
+                view_history: []
+            }
+        ];
+
+        let candidatosData = [];
+        let currentCurriculoUrl = "";
+        let currentTabFilter = "Todos";
+        let currentCandidate = null;
+        let currentLoggedUser = "Administrador";
+        let copyFeedbackTimeout = null;
+
+        function resolveAuthUser() {
+            if (typeof window.getAuthUser === "function") {
+                return window.getAuthUser();
+            }
+            try {
+                const stored = localStorage.getItem("admin_user") || localStorage.getItem("user");
+                return stored ? JSON.parse(stored) : null;
+            } catch {
+                return null;
+            }
+        }
+
+        function resolveLoggedUserNameFromStorage() {
+            try {
+                const raw = localStorage.getItem("admin_user") || localStorage.getItem("user");
+                if (!raw) return null;
+                const parsed = JSON.parse(raw);
+                return (parsed?.nome || parsed?.name || parsed?.email || parsed?.usuario || parsed?.login || null);
+            } catch {
+                return null;
+            }
+        }
+
+        (function initializeUser() {
+            const stored = resolveLoggedUserNameFromStorage();
+            if (stored) {
+                currentLoggedUser = stored.trim();
+            }
+        })();
+
+        function extractViewHistory(candidate) {
+            const sources = [
+                ...(Array.isArray(candidate.viewHistory) ? candidate.viewHistory : []),
+                ...(Array.isArray(candidate.view_history) ? candidate.view_history : []),
+                ...(Array.isArray(candidate.historico_visualizacoes) ? candidate.historico_visualizacoes : []),
+                ...(Array.isArray(candidate.visualizacoes) ? candidate.visualizacoes : [])
+            ];
+            const normalized = sources
+                .map(entry => {
+                    if (!entry) return null;
+                    if (typeof entry === "string") {
+                        return { viewer: entry, timestamp: candidate.ultimo_visualizado_em };
+                    }
+                    return {
+                        viewer: entry.visualizador || entry.viewer || entry.usuario || currentLoggedUser,
+                        timestamp: entry.data || entry.timestamp || entry.enviado_em || candidate.ultimo_visualizado_em
+                    };
+                })
+                .filter(Boolean);
+            return normalized.slice(-5);
+        }
+
+        function ensureViewHistory(candidate) {
+            if (!candidate.viewHistory) {
+                candidate.viewHistory = [];
+            }
+            return candidate.viewHistory;
+        }
+
+        function addViewHistoryRecord(candidate, viewer, timestamp) {
+            const history = ensureViewHistory(candidate);
+            const normalizedTs = timestamp || new Date().toISOString();
+            const exists = history.find(entry => entry.viewer === viewer && entry.timestamp === normalizedTs);
+            if (!exists) {
+                history.push({ viewer, timestamp: normalizedTs });
+                if (history.length > 5) {
+                    history.splice(0, history.length - 5);
+                }
+            }
+        }
+
+        function copyToClipboard(value) {
+            if (!value) {
+                return Promise.reject(new Error("Valor vazio"));
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                return navigator.clipboard.writeText(value);
+            }
+            const textarea = document.createElement("textarea");
+            textarea.value = value;
+            textarea.style.position = "fixed";
+            textarea.style.left = "-9999px";
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            return new Promise((resolve, reject) => {
+                const successful = document.execCommand("copy");
+                document.body.removeChild(textarea);
+                successful ? resolve() : reject(new Error("execCommand falhou"));
+            });
+        }
+
+        function showCopyFeedback(message) {
+            const feedback = document.getElementById("copy-feedback");
+            if (!feedback) return;
+            feedback.textContent = message;
+            feedback.classList.add("visible");
+            if (copyFeedbackTimeout) {
+                clearTimeout(copyFeedbackTimeout);
+            }
+            copyFeedbackTimeout = setTimeout(() => {
+                feedback.classList.remove("visible");
+            }, 2200);
+        }
+
+        function copyField(fieldId, label = "Valor") {
+            const field = document.getElementById(fieldId);
+            const rawValue = field?.textContent?.trim();
+            if (!rawValue) {
+                showCopyFeedback(`${label} indisponível para copiar`);
+                return;
+            }
+            copyToClipboard(rawValue)
+                .then(() => showCopyFeedback(`${label} copiado!`))
+                .catch((error) => {
+                    console.error("Erro ao copiar:", error);
+                    showCopyFeedback(`Não foi possível copiar o ${label}`);
+                });
+        }
+
+        function buildWhatsAppUrl(phone) {
+            if (!phone) return "";
+            const digits = phone.replace(/\D/g, "");
+            if (!digits) return "";
+            const normalized = digits.startsWith("55") ? digits : `55${digits}`;
+            return `https://wa.me/${normalized}`;
+        }
+
+        function startWhatsAppConversation() {
+            const phone = currentCandidate?.telefone || "";
+            const url = buildWhatsAppUrl(phone);
+            if (!url) {
+                showCopyFeedback("Telefone não disponível");
+                return;
+            }
+            window.open(url, "_blank");
+            showCopyFeedback("Abrindo WhatsApp...");
+        }
+
+        async function recordCandidateView(candidateId) {
+            const viewer = currentLoggedUser || "Usuário desconhecido";
+            try {
+                const response = await authFetch(`${API_BASE_URL}/api/admin/candidatos/${candidateId}/visualizar`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ visualizador: viewer })
+                });
+                const data = await response.json();
+                if (!response.ok || !data.ok) {
+                    throw new Error(data.detail || data.message || "Erro ao registrar visualização");
+                }
+                return data.candidato;
+            } catch (error) {
+                console.warn("Falha ao gravar visualização:", error);
+                throw error;
+            }
+        }
+
+        function getStatusClass(status) {
+            switch ((status || "").toLowerCase()) {
+                case "novo":
+                    return "status-novo";
+                case "em análise":
+                    return "status-analise";
+                case "entrevista":
+                    return "status-entrevista";
+                case "aprovado":
+                    return "status-aprovado";
+                case "reprovado":
+                    return "status-reprovado";
+                default:
+                    return "status-novo";
+            }
+        }
+
+        function toggleAdvancedFilters() {
+            const panel = document.getElementById("advanced-filters-panel");
+            panel?.classList.toggle("hidden");
+        }
+
+        function parseCandidateDate(value) {
+            if (!value) return null;
+            const parsed = new Date(value);
+            if (!isNaN(parsed.getTime())) {
+                return parsed;
+            }
+            const parts = value.split("/");
+            if (parts.length === 3) {
+                const [day, month, year] = parts;
+                const fallbackDate = new Date(`${year}-${month}-${day}`);
+                return isNaN(fallbackDate.getTime()) ? null : fallbackDate;
+            }
+            return null;
+        }
+
+        function formatCandidateDate(value) {
+            const date = parseCandidateDate(value);
+            if (!date) {
+                return value || "--/--/----";
+            }
+            return date.toLocaleDateString("pt-BR");
+        }
+
+        function renderHistoryList(history = [], fallbackViewer = "", fallbackTimestamp = "") {
+            if (!history.length) {
+                if (fallbackViewer) {
+                    const text = formatCandidateDateTime(fallbackTimestamp);
+                    return `<p class="text-[10px] text-warning/70">Visto por ${fallbackViewer} em ${text}</p>`;
+                }
+                return "Ainda não visualizado";
+            }
+            const entries = history.slice(-5).map(record => {
+                const viewer = record.viewer || "Usuário";
+                const time = formatCandidateDateTime(record.timestamp);
+                return `<p class="text-[10px] text-text-dim">${viewer} • ${time}</p>`;
+            });
+            return entries.join("");
+        }
+
+        function renderObservacoesHistory(history = [], fallbackText = "Nenhuma observação registrada") {
+            if (!history.length) {
+                return `<p class="text-[10px] text-text-dim/70 italic">${fallbackText}</p>`;
+            }
+
+            return history.slice(-5).reverse().map(entry => {
+                const author = (entry.autor || entry.author || entry.usuario || "Usuário").trim();
+                const text = entry.texto || entry.text || "";
+                const timestamp = entry.timestamp || entry.data || "";
+                const meta = `${author} • ${formatCandidateDateTime(timestamp)}`;
+                return `
+                    <div class="observacao-entry">
+                        <div class="observacao-entry-meta">${meta}</div>
+                        <p class="text-sm text-white break-words">${text}</p>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        function parseCandidateDateTime(value) {
+            if (!value) return null;
+            const raw = value.toString().trim();
+            if (!raw) return null;
+            const hasTimezone = /[zZ]|[+-]\d{2}:\d{2}$/.test(raw);
+            if (!hasTimezone && /^\d{4}-\d{2}-\d{2}T/.test(raw)) {
+                const utcDate = new Date(`${raw}Z`);
+                return isNaN(utcDate.getTime()) ? null : utcDate;
+            }
+            const parsed = new Date(raw);
+            return isNaN(parsed.getTime()) ? null : parsed;
+        }
+
+        function formatCandidateDateTime(value) {
+            const date = parseCandidateDateTime(value) || parseCandidateDate(value);
+            if (!date) return "--/--/---- --:--";
+            return `${date.toLocaleDateString("pt-BR")} ${date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}`;
+        }
+
+        function escapeHtml(value = "") {
+            return value
+                .toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
+        function formatExperienceDate(value) {
+            if (!value) return "";
+            const raw = value.toString().trim();
+            const match = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+            if (match) {
+                return `${match[3]}/${match[2]}/${match[1]}`;
+            }
+            const parsed = new Date(raw);
+            if (!isNaN(parsed.getTime())) {
+                return parsed.toLocaleDateString("pt-BR");
+            }
+            return raw;
+        }
+
+        function buildExperiencePeriod(start, end) {
+            const startLabel = formatExperienceDate(start);
+            const endLabel = formatExperienceDate(end);
+            if (startLabel && endLabel) {
+                return `${startLabel} → ${endLabel}`;
+            }
+            if (startLabel && !endLabel) {
+                return `Desde ${startLabel}`;
+            }
+            if (!startLabel && endLabel) {
+                return `Até ${endLabel}`;
+            }
+            return "Período não informado";
+        }
+
+        function parseExperienceDate(value) {
+            if (!value) return null;
+            const raw = value.toString().trim();
+            const match = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+            if (match) {
+                const date = new Date(`${match[1]}-${match[2]}-${match[3]}T00:00:00`);
+                return isNaN(date.getTime()) ? null : date;
+            }
+            const parsed = new Date(raw);
+            return isNaN(parsed.getTime()) ? null : parsed;
+        }
+
+        function buildExperienceDuration(start, end) {
+            const startDate = parseExperienceDate(start);
+            if (!startDate) return "—";
+            const endDate = parseExperienceDate(end) || new Date();
+            let months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
+            months += endDate.getMonth() - startDate.getMonth();
+            if (endDate.getDate() < startDate.getDate()) {
+                months -= 1;
+            }
+            if (months < 0) return "—";
+            const years = Math.floor(months / 12);
+            const rem = months % 12;
+            const parts = [];
+            if (years) parts.push(`${years}a`);
+            if (rem || !parts.length) parts.push(`${rem}m`);
+            return parts.join(" ");
+        }
+
+        function hasExperienceFlag(candidate = {}) {
+            const raw = candidate.tem_experiencia ?? candidate.experiencia ?? candidate.has_experience ?? candidate.hasExperience ?? candidate.experience;
+            if (Array.isArray(raw)) return raw.length > 0;
+            if (raw && typeof raw === "object") return true;
+            const normalized = String(raw ?? "").trim().toLowerCase();
+            return ["sim", "1", "true", "yes", "y", "s", "verdadeiro", "com"].includes(normalized);
+        }
+
+        function normalizeExperienceEntries(candidate = {}) {
+            const nested = candidate.dados?.experiencias || candidate.dados?.experiencia || candidate.curriculo?.experiencias || candidate.curriculo?.experiencia;
+            let rawSource = candidate.experiencias ?? candidate.experiencia ?? candidate.experiencia_profissional ?? candidate.historico_profissional ?? candidate.experiences ?? candidate.experience ?? nested;
+            if (typeof rawSource === "string") {
+                const trimmed = rawSource.trim();
+                if (trimmed.startsWith("[") || trimmed.startsWith("{")) {
+                    try {
+                        rawSource = JSON.parse(trimmed);
+                    } catch {
+                        rawSource = trimmed;
+                    }
+                }
+            }
+            let rawList = rawSource;
+            if (!Array.isArray(rawList)) {
+                rawList = rawList ? [rawList] : [];
+            }
+            return rawList
+                .map((item) => {
+                    if (!item) return null;
+                    if (typeof item === "string") {
+                        return { funcao: item };
+                    }
+                    if (typeof item !== "object") return null;
+                    return {
+                        empresa: item.empresa || item.company || item.organizacao || item.employer || item.local,
+                        funcao: item.funcao || item.cargo || item.role || item.titulo || item.funcionario || item.area || item.setor || item.descricao,
+                        data_admissao: item.data_admissao || item.data_inicio || item.inicio || item.admissao || item.start_date,
+                        data_demissao: item.data_demissao || item.data_fim || item.fim || item.demissao || item.end_date
+                    };
+                })
+                .filter((entry) => entry && (entry.empresa || entry.funcao || entry.data_admissao || entry.data_demissao));
+        }
+
+        function describeExperienceFunctions(candidate = {}) {
+            const entries = normalizeExperienceEntries(candidate);
+            const list = entries.map((item) => item.funcao || item.titulo || item.area || item.setor || item.descricao || item.empresa).filter(Boolean);
+            return [...new Set(list)];
+        }
+
+        function normalizeString(value = "") {
+            return String(value || "").trim().toLowerCase();
+        }
+
+        function normalizeName(value = "") {
+            return normalizeString(value)
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/[^a-z0-9]+/g, "");
+        }
+
+        let githubCandidatesCache = null;
+        let githubCandidatesPromise = null;
+
+        async function fetchGitHubCandidates() {
+            if (Array.isArray(githubCandidatesCache)) return githubCandidatesCache;
+            if (githubCandidatesPromise) return githubCandidatesPromise;
+            if (typeof fetchGitHubJson !== "function") return null;
+            githubCandidatesPromise = fetchGitHubJson(GITHUB_CANDIDATOS_URL)
+                .then((data) => {
+                    githubCandidatesCache = Array.isArray(data) ? data : null;
+                    return githubCandidatesCache;
+                })
+                .catch((error) => {
+                    console.warn("Falha ao carregar candidatos do GitHub:", error);
+                    githubCandidatesCache = null;
+                    return null;
+                })
+                .finally(() => {
+                    githubCandidatesPromise = null;
+                });
+            return githubCandidatesPromise;
+        }
+
+        function getCandidateMatches(candidates = [], base = {}) {
+            if (!Array.isArray(candidates) || !base) return [];
+            if (base.id) {
+                const byId = candidates.filter((entry) => entry?.id && String(entry.id) === String(base.id));
+                if (byId.length) return byId;
+            }
+            const cpfBase = (base.cpf || "").replace(/\D/g, "");
+            const emailBase = normalizeString(base.email);
+            const byCpfEmail = candidates.filter((entry) => {
+                if (!entry) return false;
+                const cpfEntry = (entry.cpf || "").replace(/\D/g, "");
+                const emailEntry = normalizeString(entry.email);
+                return (cpfBase && cpfEntry && cpfBase === cpfEntry) || (emailBase && emailEntry && emailBase === emailEntry);
+            });
+            if (byCpfEmail.length) return byCpfEmail;
+            const nameBase = normalizeName(base.nome || base.name || "");
+            if (!nameBase) return [];
+            return candidates.filter((entry) => normalizeName(entry?.nome || entry?.name || "") === nameBase);
+        }
+
+        function mergeExperienceEntriesFromCandidates(candidates = []) {
+            const merged = [];
+            candidates.forEach((candidate) => {
+                merged.push(...normalizeExperienceEntries(candidate));
+            });
+            const seen = new Set();
+            return merged.filter((entry) => {
+                const key = [
+                    normalizeString(entry.empresa),
+                    normalizeString(entry.funcao || entry.titulo || entry.area || entry.setor || entry.descricao),
+                    normalizeString(entry.data_admissao),
+                    normalizeString(entry.data_demissao)
+                ].join("|");
+                if (seen.has(key)) return false;
+                seen.add(key);
+                return true;
+            });
+        }
+
+        function updateExperienceUI(candidate = {}, entries = []) {
+            const hasExperience = entries.length ? true : hasExperienceFlag(candidate);
+            const functions = describeExperienceFunctions(candidate);
+            const badgeEl = document.getElementById("candidate-experience-badge");
+            if (badgeEl) {
+                badgeEl.textContent = hasExperience ? "Com experiência" : "Sem experiência";
+                badgeEl.className = `info-value ${hasExperience ? "experience-pill sim" : "experience-pill nao"}`;
+            }
+            const functionsEl = document.getElementById("candidate-experience-functions");
+            if (functionsEl) {
+                if (functions.length) {
+                    functionsEl.textContent = `Funções: ${functions.join(" • ")}`;
+                } else if (entries.length) {
+                    functionsEl.textContent = `Experiências: ${entries.length}`;
+                } else {
+                    functionsEl.textContent = "—";
+                }
+            }
+            const detailsEl = document.getElementById("candidate-experience-details");
+            if (detailsEl) {
+                if (entries.length) {
+                    detailsEl.innerHTML = entries.map((entry) => {
+                        const role = escapeHtml(entry.funcao || "Função não informada");
+                        const companyName = escapeHtml(entry.empresa || "Empresa não informada");
+                        const period = escapeHtml(buildExperiencePeriod(entry.data_admissao, entry.data_demissao));
+                        const duration = escapeHtml(buildExperienceDuration(entry.data_admissao, entry.data_demissao));
+                        return `
+                            <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 shadow-[0_12px_25px_rgba(15,23,42,0.35)]">
+                                <div class="flex items-center justify-between gap-3">
+                                    <div>
+                                        <p class="text-sm font-semibold text-white/90">${role}</p>
+                                        <p class="text-[11px] text-text-dim">${companyName}</p>
+                                    </div>
+                                    <span class="px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-[0.2em] bg-primary/10 text-primary border border-primary/30">
+                                        ${duration}
+                                    </span>
+                                </div>
+                                <p class="text-[10px] text-text-dim mt-2">Período: ${period}</p>
+                            </div>
+                        `;
+                    }).join("");
+                } else {
+                    detailsEl.textContent = hasExperience
+                        ? "Experiências não informadas."
+                        : "Sem experiência registrada.";
+                }
+            }
+        }
+
+        function populateFilterOptions() {
+            const uniqueValues = (key) => {
+                return [...new Set(
+                    candidatosData
+                        .map(candidate => (candidate[key] || "").trim())
+                        .filter(Boolean)
+                )].sort((a, b) => a.localeCompare(b, "pt-BR"));
+            };
+
+            const fillSelect = (id, items, label) => {
+                const select = document.getElementById(id);
+                if (!select) return;
+                const currentValue = select.value;
+                select.innerHTML = `<option value="">${label}</option>` +
+                    items.map(item => `<option value="${item}" ${item === currentValue ? "selected" : ""}>${item}</option>`).join("");
+            };
+
+            fillSelect("filter-vaga", uniqueValues("vaga"), "Todas as Vagas");
+            fillSelect("filter-cidade", uniqueValues("cidade"), "Todas as Cidades");
+            fillSelect("filter-bairro", uniqueValues("bairro"), "Todos os Bairros");
+        }
+
+        function getCandidateExperienceText(candidate) {
+            const entries = normalizeExperienceEntries(candidate);
+            if (!entries.length) return "";
+            return entries.map(entry => {
+                return [
+                    entry.funcao,
+                    entry.titulo,
+                    entry.area,
+                    entry.setor,
+                    entry.descricao,
+                    entry.empresa
+                ].filter(Boolean).join(" ");
+            }).join(" ").toLowerCase();
+        }
+
+        const filterDescriptors = [
+            { id: "search-candidatos", label: "Busca", formatter: v => v },
+            { id: "filter-vaga", label: "Vaga", formatter: v => v },
+            { id: "filter-cidade", label: "Cidade", formatter: v => v },
+            { id: "filter-bairro", label: "Bairro", formatter: v => v },
+            { id: "filter-candidato-status", label: "Status", formatter: v => v },
+            { id: "filter-experience-status", label: "Experiência", formatter: v => (v === "com" ? "Com" : "Sem") },
+            { id: "filter-experience-text", label: "Experiência (função)", formatter: v => v },
+            { id: "filter-date-start", label: "Período Início", formatter: v => formatCandidateDate(v) },
+            { id: "filter-date-end", label: "Período Fim", formatter: v => formatCandidateDate(v) }
+        ];
+
+        function formatChipValue(descriptor, value) {
+            if (!value) return "";
+            return descriptor.formatter ? descriptor.formatter(value) : value;
+        }
+
+        function updateFilterChips() {
+            const container = document.getElementById("active-filter-chips");
+            if (!container) return;
+            const chips = filterDescriptors.reduce((acc, descriptor) => {
+                const element = document.getElementById(descriptor.id);
+                const rawValue = element?.value?.trim();
+                if (rawValue) {
+                    const displayValue = formatChipValue(descriptor, rawValue);
+                    acc.push(`<span class="filter-chip">${descriptor.label}: ${displayValue}</span>`);
+                }
+                return acc;
+            }, []);
+            container.innerHTML = chips.length
+                ? chips.join("")
+                : `<span class="text-[10px] uppercase tracking-[0.4em] text-text-dim">Sem filtros ativos</span>`;
+        }
+
+        function applyFilters() {
+            const searchInput = document.getElementById("search-candidatos");
+            const search = (searchInput?.value || "").trim().toLowerCase();
+            const searchDigits = search.replace(/\D/g, "");
+            const vaga = document.getElementById("filter-vaga")?.value || "";
+            const cidade = document.getElementById("filter-cidade")?.value || "";
+            const bairro = document.getElementById("filter-bairro")?.value || "";
+            const status = document.getElementById("filter-candidato-status")?.value || "";
+            const experienceStatus = document.getElementById("filter-experience-status")?.value || "";
+            const experienceText = (document.getElementById("filter-experience-text")?.value || "").trim().toLowerCase();
+            const dateStart = document.getElementById("filter-date-start")?.value;
+            const dateEnd = document.getElementById("filter-date-end")?.value;
+
+            const startDate = dateStart ? new Date(dateStart) : null;
+            const endDate = dateEnd ? new Date(dateEnd) : null;
+            if (endDate) {
+                endDate.setHours(23, 59, 59, 999);
+            }
+
+            const filtered = candidatosData.filter(candidate => {
+                const name = (candidate.nome || "").toLowerCase();
+                const email = (candidate.email || "").toLowerCase();
+                const cpfDigits = (candidate.cpf || "").replace(/\D/g, "");
+
+                const matchesSearch =
+                    !search ||
+                    name.includes(search) ||
+                    email.includes(search) ||
+                    (searchDigits && cpfDigits.includes(searchDigits));
+                const matchesVaga = !vaga || (candidate.vaga || "") === vaga;
+                const matchesCidade = !cidade || (candidate.cidade || "") === cidade;
+                const matchesBairro = !bairro || (candidate.bairro || "") === bairro;
+                const matchesStatus = !status || (candidate.status || "") === status;
+                const experienceEntries = normalizeExperienceEntries(candidate);
+                const hasExperience = experienceEntries.length ? true : hasExperienceFlag(candidate);
+                const matchesExperienceStatus =
+                    !experienceStatus ||
+                    (experienceStatus === "com" ? hasExperience : !hasExperience);
+                const experienceSearchText = experienceText ? getCandidateExperienceText(candidate) : "";
+                const matchesExperienceText =
+                    !experienceText ||
+                    (experienceSearchText && experienceSearchText.includes(experienceText));
+                let matchesTab = true;
+            if (currentTabFilter === "Vistos") {
+                matchesTab = !!candidate.ultimo_visualizado_em;
+            } else if (currentTabFilter === "Novos") {
+                matchesTab = (candidate.status || "").toLowerCase() === "novo";
+            }
+
+            let matchesDate = true;
+            if (startDate || endDate) {
+                    const candidateDate = parseCandidateDate(candidate.enviado_em || candidate.data);
+                    if (!candidateDate) {
+                        matchesDate = false;
+                    } else {
+                        if (startDate && candidateDate < startDate) {
+                            matchesDate = false;
+                        }
+                        if (endDate && candidateDate > endDate) {
+                            matchesDate = false;
+                        }
+                    }
+                }
+
+                return matchesSearch && matchesVaga && matchesCidade && matchesBairro && matchesStatus && matchesExperienceStatus && matchesExperienceText && matchesTab && matchesDate;
+            });
+
+            const sorted = filtered.sort((a, b) => {
+                const dateA = parseCandidateDate(a.enviado_em || a.data);
+                const dateB = parseCandidateDate(b.enviado_em || b.data);
+                return (dateB ? dateB.getTime() : 0) - (dateA ? dateA.getTime() : 0);
+            });
+
+            renderTable(sorted);
+            updateFilterChips();
+        }
+
+        const quickDateRangeDefinitions = {
+            today: 0,
+            last7: 6,
+            last30: 29
+        };
+
+        let quickFilterButtons = [];
+
+        function formatDateForInput(date) {
+            return date.toISOString().split("T")[0];
+        }
+
+        function setActiveQuickFilter(rangeKey) {
+            quickFilterButtons.forEach(btn => {
+                const isActive = btn.dataset.quickDate === rangeKey;
+                btn.classList.toggle("active", isActive);
+            });
+        }
+
+        function applyQuickDateRange(rangeKey) {
+            const offset = quickDateRangeDefinitions[rangeKey];
+            if (offset === undefined) return;
+            const startInput = document.getElementById("filter-date-start");
+            const endInput = document.getElementById("filter-date-end");
+            if (!startInput || !endInput) return;
+            const today = new Date();
+            const startDate = new Date(today);
+            startDate.setDate(today.getDate() - offset);
+            startInput.value = formatDateForInput(startDate);
+            endInput.value = formatDateForInput(today);
+            setActiveQuickFilter(rangeKey);
+            applyFilters();
+        }
+
+        function filterByTab(tabName, btn) {
+            document.querySelectorAll(".tool-tab").forEach(b => b.classList.remove("active"));
+            btn?.classList.add("active");
+
+            currentTabFilter = tabName || "Todos";
+
+            const statusSelect = document.getElementById("filter-candidato-status");
+            if (statusSelect) {
+                if (tabName === "Novos") {
+                    statusSelect.value = "Novo";
+                } else {
+                    statusSelect.value = "";
+                }
+            }
+            applyFilters();
+        }
+
+        function clearFilters() {
+            document.getElementById("search-candidatos").value = "";
+            document.getElementById("filter-vaga").value = "";
+            document.getElementById("filter-cidade").value = "";
+            document.getElementById("filter-bairro").value = "";
+            document.getElementById("filter-candidato-status").value = "";
+            document.getElementById("filter-experience-status").value = "";
+            document.getElementById("filter-experience-text").value = "";
+            document.getElementById("filter-date-start").value = "";
+            document.getElementById("filter-date-end").value = "";
+
+            document.querySelectorAll(".tool-tab").forEach(b => b.classList.remove("active"));
+            document.querySelector(".tool-tab")?.classList.add("active");
+            currentTabFilter = "Todos";
+            
+            applyFilters();
+            updateFilterChips();
+            setActiveQuickFilter(null);
+        }
+
+        function isDeveloperUser() {
+            const user = resolveAuthUser();
+            const role = (user?.funcao || user?.role || "").toString().toUpperCase();
+            return role.includes("DESENVOLVEDOR");
+        }
+
+        async function deleteCandidate(candidateId) {
+            if (!isDeveloperUser()) {
+                alert("Apenas desenvolvedores podem excluir candidaturas.");
+                return;
+            }
+            if (!candidateId) return;
+            const confirmed = confirm("Deseja excluir esta candidatura permanentemente?");
+            if (!confirmed) return;
+            try {
+                const response = await authFetch(`${API_BASE_URL}/api/admin/candidatos/${candidateId}`, {
+                    method: "DELETE"
+                });
+                const data = await response.json();
+                if (!response.ok || !data.ok) {
+                    throw new Error(data.detail || data.message || "Erro ao excluir candidatura");
+                }
+                candidatosData = candidatosData.filter(c => String(c.id) !== String(candidateId));
+                applyFilters();
+                showCopyFeedback("Candidatura excluída com sucesso");
+            } catch (error) {
+                console.error("Erro ao excluir candidatura:", error);
+                alert("Não foi possível excluir a candidatura.");
+            }
+        }
+
+        function renderTable(data) {
+            const table = document.getElementById("candidatos-table");
+            const countBadge = document.getElementById("candidate-count-badge");
+            if (!table) return;
+
+            if (!data.length) {
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">Nenhum candidato encontrado</td>
+                    </tr>
+                `;
+                if (countBadge) {
+                    countBadge.textContent = "0 Encontrados";
+                }
+                return;
+            }
+
+                table.innerHTML = data.map(candidate => {
+                    const dateLabel = formatCandidateDate(candidate.enviado_em || candidate.data);
+                    const history = (candidate.viewHistory || []).slice(-5);
+                const latestEntry = history.length ? history[history.length - 1] : null;
+                const fallbackViewer = candidate.ultimo_visualizador;
+                const fallbackTimestamp = candidate.ultimo_visualizado_em;
+                const viewedText = latestEntry
+                    ? `Visto por ${latestEntry.viewer} em ${formatCandidateDateTime(latestEntry.timestamp)}`
+                    : fallbackViewer
+                        ? `Visto por ${fallbackViewer} em ${formatCandidateDateTime(fallbackTimestamp)}`
+                        : "Ainda não visto";
+                const rowClass = latestEntry || fallbackViewer ? "" : "candidate-unseen";
+                const historyBadges = history.map(entry => `
+                    <span class="view-history-item">
+                        ${entry.viewer || "Usuário desconhecido"} • ${formatCandidateDateTime(entry.timestamp)}
+                    </span>
+                `).join("");
+                const fallbackBadge = !history.length && fallbackViewer
+                    ? `<span class="view-history-item">${fallbackViewer} • ${formatCandidateDateTime(fallbackTimestamp)}</span>`
+                    : "";
+                const historyEntryContent = historyBadges || fallbackBadge;
+                    const historySection = historyEntryContent ? `<div class="view-history">${historyEntryContent}</div>` : "";
+                const locationParts = [
+                    candidate.cidade?.trim() || "",
+                    candidate.bairro?.trim() || ""
+                ].filter(Boolean);
+                const locationLabel = locationParts.length ? locationParts.join(" • ") : "Cidade / Bairro indisponível";
+                const experienceEntries = normalizeExperienceEntries(candidate);
+                const hasExperience = experienceEntries.length ? true : hasExperienceFlag(candidate);
+                const experienceBadge = hasExperience
+                    ? `<span class="experience-indicator"><i class="bi bi-briefcase-fill"></i>Experiência</span>`
+                    : "";
+                const canDelete = isDeveloperUser();
+                    return `
+                    <tr class="table-row animate-fade-in ${rowClass}">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-xs font-bold text-primary">
+                                    ${candidate.nome ? candidate.nome.charAt(0) : "?"}
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-white">${candidate.nome || "Nome indisponível"}</p>
+                                    <p class="text-[10px] text-text-dim font-mono">${candidate.cpf || "----"}</p>
+                                    <p class="text-[10px] uppercase tracking-[0.3em] text-warning/70 mt-1">${viewedText}</p>
+                                    <p class="text-[10px] text-text-dim uppercase tracking-[0.3em]">${locationLabel}</p>
+                                    ${experienceBadge}
+                                    ${historySection}
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <p class="text-sm text-white">${candidate.vaga || "Vaga não informada"}</p>
+                        </td>
+                        <td class="px-6 py-4">
+                            <p class="text-sm text-white">${candidate.telefone || "Telefone indisponível"}</p>
+                            <p class="text-[10px] text-text-dim">${candidate.email || "Email indisponível"}</p>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-text-dim font-mono">${dateLabel}</td>
+                        <td class="px-6 py-4">
+                            <span class="status-badge ${getStatusClass(candidate.status)}">${candidate.status || "Novo"}</span>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <button onclick="viewCandidate('${candidate.id}')" class="view-action">
+                                    <span class="material-symbols-rounded text-lg">visibility</span>
+                                    <span>Visualizar</span>
+                                </button>
+                                ${canDelete ? `
+                                <button onclick="deleteCandidate('${candidate.id}')" class="delete-action">
+                                    <span class="material-symbols-rounded text-lg">delete</span>
+                                    <span>Excluir</span>
+                                </button>
+                                ` : ""}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join("");
+
+            if (countBadge) {
+                countBadge.textContent = `${data.length} Encontrados`;
+            }
+        }
+
+        function syncCandidateInList(candidate) {
+            const index = candidatosData.findIndex(c => String(c.id) === String(candidate.id));
+            if (index !== -1) {
+                candidatosData[index] = candidate;
+            }
+        }
+
+        async function loadCandidatos() {
+            const spinner = document.getElementById("loading-spinner-candidatos");
+            spinner?.classList.remove("d-none");
+
+            try {
+                const response = await authFetch("/api/admin/candidatos");
+                if (!response.ok) {
+                    throw new Error(`Status ${response.status}`);
+                }
+                const payload = await response.json();
+                if (payload?.ok && Array.isArray(payload.candidatos)) {
+                    candidatosData = payload.candidatos.map(candidate => ({
+                        ...candidate,
+                        enviado_em: candidate.enviado_em || candidate.data || "",
+                        viewHistory: extractViewHistory(candidate)
+                    }));
+                    const githubCandidates = await fetchGitHubCandidates();
+                    if (Array.isArray(githubCandidates)) {
+                        candidatosData = candidatosData.map(candidate => {
+                            const matches = getCandidateMatches(githubCandidates, candidate);
+                            const mergedExperiences = mergeExperienceEntriesFromCandidates(matches);
+                            if (!mergedExperiences.length) {
+                                return candidate;
+                            }
+                            return {
+                                ...candidate,
+                                experiencias: mergedExperiences,
+                                tem_experiencia: "Sim"
+                            };
+                        });
+                    }
+                } else {
+                    throw new Error("Resposta inválida da API");
+                }
+            } catch (error) {
+                console.error("Erro ao carregar candidatos:", error);
+                candidatosData = fallbackCandidatos;
+            } finally {
+                spinner?.classList.add("d-none");
+                populateFilterOptions();
+                applyFilters();
+            }
+        }
+
+        async function viewCandidate(id) {
+            let candidate = candidatosData.find(c => String(c.id) === String(id));
+            if (!candidate) return;
+
+            try {
+                const updated = await recordCandidateView(id);
+                candidate = {
+                    ...candidate,
+                    ...updated,
+                    viewHistory: extractViewHistory(updated)
+                };
+                syncCandidateInList(candidate);
+                renderTable(candidatosData);
+            } catch (error) {
+                console.warn("Mantendo dados locais do candidato após falha na gravação:", error);
+                candidate.viewHistory = extractViewHistory(candidate);
+            }
+
+            let candidateExperienceEntries = mergeExperienceEntriesFromCandidates(getCandidateMatches(candidatosData, candidate));
+            if (!candidateExperienceEntries.length) {
+                candidateExperienceEntries = normalizeExperienceEntries(candidate);
+            } else {
+                candidate = {
+                    ...candidate,
+                    experiencias: candidateExperienceEntries,
+                    tem_experiencia: "Sim"
+                };
+            }
+            if (!candidateExperienceEntries.length) {
+                const githubCandidates = await fetchGitHubCandidates();
+                if (Array.isArray(githubCandidates)) {
+                    const matches = getCandidateMatches(githubCandidates, candidate);
+                    if (matches.length) {
+                        const mergedExperiences = mergeExperienceEntriesFromCandidates(matches);
+                        if (mergedExperiences.length) {
+                            candidateExperienceEntries = mergedExperiences;
+                            candidate = {
+                                ...candidate,
+                                experiencias: mergedExperiences,
+                                tem_experiencia: "Sim"
+                            };
+                        } else {
+                            const fallbackCandidate = matches[0];
+                            candidate = {
+                                ...fallbackCandidate,
+                                ...candidate,
+                                experiencias: fallbackCandidate.experiencias ?? candidate.experiencias
+                            };
+                            candidateExperienceEntries = normalizeExperienceEntries(candidate);
+                        }
+                    }
+                }
+            }
+
+            currentCandidate = candidate;
+            document.getElementById("candidate-name").textContent = candidate.nome || "Nome indisponível";
+            document.getElementById("candidate-vaga").textContent = candidate.vaga || "Vaga não informada";
+            document.getElementById("candidate-enviado-em").textContent = `Enviado em: ${formatCandidateDate(candidate.enviado_em || candidate.data)}`;
+            document.getElementById("candidate-cpf").textContent = candidate.cpf || "----";
+            document.getElementById("candidate-telefone").textContent = candidate.telefone || "-";
+            document.getElementById("candidate-email").textContent = candidate.email || "-";
+            document.getElementById("candidate-cep").textContent = candidate.cep || "-";
+            document.getElementById("candidate-cidade").textContent = candidate.cidade || "-";
+            document.getElementById("candidate-bairro").textContent = candidate.bairro || "-";
+            document.getElementById("candidate-rua").textContent = candidate.rua || "-";
+
+            const editIdField = document.getElementById("edit-candidate-id");
+            if (editIdField) {
+                editIdField.value = candidate.id;
+            }
+
+            document.getElementById("candidate-status-badge").innerHTML = `<span class="status-badge ${getStatusClass(candidate.status)}">${candidate.status || "Novo"}</span>`;
+            document.getElementById("candidate-visualizado").innerHTML = renderHistoryList(candidate.viewHistory || []);
+            updateExperienceUI(candidate, candidateExperienceEntries);
+
+            document.getElementById("edit-candidate-status").value = candidate.status || "Novo";
+            document.getElementById("edit-candidate-entrevistador").value = candidate.entrevistador || "";
+            document.getElementById("edit-candidate-data-entrevista").value = candidate.data_entrevista
+                ? candidate.data_entrevista.replace(" ", "T").substring(0, 16)
+                : "";
+            document.getElementById("edit-candidate-observacoes").value = candidate.observacoes || "";
+            const observacoesHistoryEl = document.getElementById("candidate-observacoes-history");
+            if (observacoesHistoryEl) {
+                const historySource = candidate.historico_observacoes || candidate.observacoes_history || candidate.observacoes || [];
+                observacoesHistoryEl.innerHTML = renderObservacoesHistory(Array.isArray(historySource) ? historySource : []);
+            }
+
+            currentCurriculoUrl = candidate.arquivo_url || "";
+            const link = document.getElementById("candidate-curriculo-link");
+            if (link) {
+                if (candidate.arquivo_url) {
+                    link.href = candidate.arquivo_url;
+                    link.style.display = "inline-flex";
+                } else {
+                    link.href = "#";
+                    link.style.display = "none";
+                }
+            }
+
+            const modal = new bootstrap.Modal(document.getElementById("viewCandidateModal"));
+            modal.show();
+        }
+
+        async function saveCandidateChanges() {
+            const candidateId = document.getElementById("edit-candidate-id").value;
+            if (!candidateId) {
+                alert("Candidato inválido");
+                return;
+            }
+
+            const status = document.getElementById("edit-candidate-status").value;
+            if (!status) {
+                alert("Status é obrigatório.");
+                return;
+            }
+
+            const entrevistador = document.getElementById("edit-candidate-entrevistador").value.trim();
+            const dataEntrevista = document.getElementById("edit-candidate-data-entrevista").value;
+            const observacoes = document.getElementById("edit-candidate-observacoes").value.trim();
+            const authUser = resolveAuthUser();
+            const editorName = (authUser?.nome || authUser?.name || authUser?.email || "Usuário").trim();
+
+            const candidateData = {
+                status,
+                entrevistador,
+                data_entrevista: dataEntrevista,
+                observacoes,
+                updated_by: editorName
+            };
+
+            try {
+                const response = await authFetch(`${API_BASE_URL}/api/admin/candidatos/${candidateId}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(candidateData)
+                });
+                const data = await response.json();
+                if (!response.ok || !data.ok) {
+                    throw new Error(data.message || data.detail || "Erro ao atualizar candidato");
+                }
+
+                showCopyFeedback("Candidato atualizado com sucesso");
+                bootstrap.Modal.getInstance(document.getElementById("viewCandidateModal"))?.hide();
+                loadCandidatos();
+            } catch (error) {
+                console.error("Erro ao atualizar candidato:", error);
+                alert("Erro ao atualizar candidato. Verifique os campos e tente novamente.");
+            }
+        }
+
+        function previewCurriculo() {
+            if (!currentCurriculoUrl) {
+                alert("Nenhum currículo disponível para visualização.");
+                return;
+            }
+
+            const iframe = document.getElementById("curriculo-preview-frame");
+            if (iframe) {
+                iframe.src = currentCurriculoUrl;
+            }
+
+            const modalEl = document.getElementById("curriculoPreviewModal");
+            if (modalEl) {
+                const modal = new bootstrap.Modal(modalEl);
+                modalEl.addEventListener("hidden.bs.modal", () => {
+                    if (iframe) {
+                        iframe.src = "";
+                    }
+                }, { once: true });
+                modal.show();
+            }
+        }
+
+        function normalizeCurriculoHref() {
+            return normalizeCurriculoUrl(currentCurriculoUrl) || currentCurriculoUrl;
+        }
+
+        async function downloadCurriculoFile() {
+            const url = normalizeCurriculoHref();
+            if (!url) {
+                showCopyFeedback("Currículo não disponível");
+                return;
+            }
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error("Não foi possível baixar o arquivo");
+                }
+                const blob = await response.blob();
+                const fileName = currentCandidate?.arquivo_nome || "curriculo.pdf";
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                showCopyFeedback("Download iniciado");
+            } catch (error) {
+                console.error("Erro ao baixar currículo:", error);
+                alert("Não foi possível baixar o currículo.");
+            }
+        }
+
+        function printCurriculoFile() {
+            const url = normalizeCurriculoHref();
+            if (!url) {
+                alert("Currículo indisponível");
+                return;
+            }
+            const printWindow = window.open(url, "_blank");
+            if (!printWindow) return;
+            printWindow.addEventListener("load", () => {
+                printWindow.focus();
+                printWindow.print();
+            });
+        }
+
+        function shareCurriculoWhatsApp() {
+            const url = normalizeCurriculoHref();
+            if (!url) {
+                alert("Currículo indisponível");
+                return;
+            }
+            const message = encodeURIComponent(`Confira o currículo de ${currentCandidate?.nome || "este candidato"}: ${url}`);
+            window.open(`https://wa.me/?text=${message}`, "_blank");
+        }
+
+        function shareCurriculoEmail() {
+            const url = normalizeCurriculoHref();
+            const subject = encodeURIComponent("Currículo enviado via painel");
+            const body = encodeURIComponent(`Segue o link para o currículo de ${currentCandidate?.nome || "um candidato"}:\n${url}`);
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
+        }
+
+        function showQrPanel() {
+            const url = normalizeCurriculoHref();
+            if (!url) {
+                alert("Currículo indisponível");
+                return;
+            }
+            const qrImage = document.getElementById("qr-image");
+            if (qrImage) {
+                qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(url)}`;
+            }
+            document.getElementById("qr-panel").classList.remove("hidden");
+        }
+
+        function hideQrPanel() {
+            document.getElementById("qr-panel").classList.add("hidden");
+        }
+
+        function getGreetingMessage() {
+            const hour = new Date().getHours();
+            if (hour >= 5 && hour < 12) return "Bom dia";
+            if (hour >= 12 && hour < 18) return "Boa tarde";
+            return "Boa noite";
+        }
+
+        function updateHeaderClock() {
+            const timer = document.getElementById("current-time");
+            if (timer) {
+                timer.textContent = new Date().toLocaleTimeString("pt-BR", { hour12: false });
+            }
+        }
+
+        function setupHeaderUserDisplay() {
+            const user = resolveAuthUser();
+            const name = (user?.nome || user?.name || user?.email || "Administrador").trim();
+            const role = (user?.funcao || user?.role || "Root Access").trim().toUpperCase();
+            const greeting = document.getElementById("user-greeting");
+            const nameDisplay = document.getElementById("user-name-display");
+            const roleDisplay = document.getElementById("user-role-display");
+            const avatar = document.getElementById("user-avatar");
+
+            if (greeting) {
+                greeting.textContent = `${getGreetingMessage()}, ${name}`;
+            }
+            if (nameDisplay) {
+                nameDisplay.textContent = name;
+            }
+            if (roleDisplay) {
+                roleDisplay.textContent = role;
+            }
+            if (avatar) {
+                const avatarUrl = user?.avatar || user?.foto || user?.photo || user?.avatar_url;
+                avatar.src = avatarUrl
+                    ? avatarUrl
+                    : `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=0F172A&color=3B82F6`;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            if (!ensureAuthenticated()) return;
+            updateHeaderClock();
+            setupHeaderUserDisplay();
+            setInterval(updateHeaderClock, 1000);
+            loadCandidatos();
+        });
+
+        quickFilterButtons = Array.from(document.querySelectorAll("[data-quick-date]"));
+        quickFilterButtons.forEach(btn => {
+            btn.addEventListener("click", () => {
+                applyQuickDateRange(btn.dataset.quickDate);
+            });
+        });
+    </script>
+</body>
+</html>

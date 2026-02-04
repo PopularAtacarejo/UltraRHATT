@@ -1,0 +1,30 @@
+[
+  {
+    "nome": "Marketing",
+    "responsavel": "",
+    "descricao": "",
+    "id": "f2820cee30b34d0d8f16912f7605ba43",
+    "salvo_em": "2026-01-30T20:10:20.456987"
+  },
+  {
+    "nome": "Padaria",
+    "responsavel": "",
+    "descricao": "",
+    "id": "5df514e95bdb4bd2ab87c3dfef7d011a",
+    "salvo_em": "2026-02-03T12:27:09.782878"
+  },
+  {
+    "id": "setor-1",
+    "nome": "Operações",
+    "responsavel": "Claudia Ribeiro",
+    "descricao": "Coordena áreas de estoque, logística e limpeza.",
+    "salvo_em": "2025-01-02T09:30:00Z"
+  },
+  {
+    "id": "setor-2",
+    "nome": "Comercial",
+    "responsavel": "Ricardo Moraes",
+    "descricao": "Responsável pelo atendimento e negociações com clientes.",
+    "salvo_em": "2025-01-02T10:45:00Z"
+  }
+]
